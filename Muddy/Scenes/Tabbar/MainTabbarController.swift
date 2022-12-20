@@ -11,29 +11,30 @@ import RAMAnimatedTabBarController
 class MainTabbarController: RAMAnimatedTabBarController  {
     
     let tabItemModels: [TabItemModel] = [
-        .init(title: "Home", controller: HomeViewController(), systemImageName: "house"),
-        .init(title: "Discover", controller: DiscoverViewController(), systemImageName: "wand.and.rays"),
+        .init(title: "Feed", controller: HomeViewController(), systemImageName: "film.stack"),
+        .init(title: "Discover", controller: DiscoverViewController(), systemImageName: "bolt.horizontal"),
         .init(title: "Profile", controller: ProfileViewController(), systemImageName: "person")
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
         viewControllers = createViewControllers()
+        bottomLineColor = .white
     }
     
     private func createViewControllers() -> [UIViewController] {
-        
         var vcs: [UIViewController] = []
-        tabitemmode.forEach { i in
-            let controller =  ViewController()
-            let vc = UINavigationController(rootViewController: controller)
-            let item: RAMAnimatedTabBarItem = .init(title: "House", image: .init(systemName: "house"), tag: i)
-            item.animation = RAMBounceAnimation()
+        tabItemModels.enumerated().forEach { index, model in
+            let vc = UINavigationController(rootViewController: model.controller)
+            let item: RAMAnimatedTabBarItem = .init(title: model.title, image: .init(systemName: model.systemImageName), tag: index)
+            item.animation = RAMFumeAnimation()
+            if index != tabBar.selectedItem?.tag {
+                item.textColor = .systemGray
+                item.iconColor = .systemGray
+            }
             vc.tabBarItem = item
             vcs.append(vc)
+            
         }
         return vcs
     }

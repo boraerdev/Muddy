@@ -9,15 +9,15 @@
 import UIKit
 
 protocol HomePresentationLogic {
-    func presentSomething(response: Home.Something.Response)
+    func presentMovies(response: Home.HomeMovies.Response)
 }
 
 class HomePresenter: HomePresentationLogic {
     weak var viewController: HomeDisplayLogic?
     
     // MARK: Do something
-    func presentSomething(response: Home.Something.Response) {
-        let viewModel = Home.Something.ViewModel()
-        viewController?.displaySomething(viewModel: viewModel)
+    func presentMovies(response: Home.HomeMovies.Response) {
+        let viewModel = Home.HomeMovies.ViewModel(popularMovies: response.popularMovies, upcomingMovies: response.upcomingMovies, topRatedMovies: response.topRatedMovies, nowPlayingMovies: response.nowPlayingMovies)
+        viewController?.displayMovies(viewModel: viewModel)
     }
 }

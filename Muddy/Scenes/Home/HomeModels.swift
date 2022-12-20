@@ -10,12 +10,20 @@ import UIKit
 
 enum Home {
     // MARK: Use cases
-    enum Something {
+    enum HomeMovies {
         struct Request {
         }
         struct Response {
+            var popularMovies: PopularMovies?
+            var upcomingMovies: UpcomingMovies?
+            var topRatedMovies: TopRatedMovies?
+            var nowPlayingMovies: NowPlayingMovies?
         }
         struct ViewModel {
+            var popularMovies: PopularMovies?
+            var upcomingMovies: UpcomingMovies?
+            var topRatedMovies: TopRatedMovies?
+            var nowPlayingMovies: NowPlayingMovies?
         }
     }
 }

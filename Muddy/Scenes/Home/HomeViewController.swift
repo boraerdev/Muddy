@@ -7,15 +7,20 @@
 //
 
 import UIKit
+import LBTATools
 
-protocol HomeDisplayLogic: class {
-    func displaySomething(viewModel: Home.Something.ViewModel)
+protocol HomeDisplayLogic: AnyObject {
+    func displayMovies(viewModel: Home.HomeMovies.ViewModel)
 }
 
-class HomeViewController: UIViewController, HomeDisplayLogic {
+final class HomeViewController: UIViewController {
     var interactor: HomeBusinessLogic?
     var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
     
+    //UI
+    let bgView = BackgrounView()
+    var Movies: [[Result]] = [[]]
+
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -41,29 +46,31 @@ class HomeViewController: UIViewController, HomeDisplayLogic {
         router.dataStore = interactor
     }
     
-    // MARK: Routing
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let scene = segue.identifier {
-            let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-            if let router = router, router.responds(to: selector) {
-                router.perform(selector, with: segue)
-            }
-        }
-    }
-    
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        doSomething()
+        fetchMovies()
+        view.addSubview(bgView)
+        bgView.fillSuperview()
+        
     }
     
     // MARK: Do something
-    func doSomething() {
-        let request = Home.Something.Request()
-        interactor?.doSomething(request: request)
+    func fetchMovies() {
+        let request = Home.HomeMovies.Request()
+        Task { await interactor?.fetchHomeMovies(request: request) }
     }
     
-    func displaySomething(viewModel: Home.Something.ViewModel) {
-        //nameTextField.text = viewModel.name
+}
+
+extension HomeViewController: HomeDisplayLogic {
+    func displayMovies(viewModel: Home.HomeMovies.ViewModel) {
+
+        Movies.append(viewModel.nowPlayingMovies?.results ?? [])
+        Movies.append(viewModel.popularMovies?.results ?? [])
+        Movies.append(viewModel.upcomingMovies?.results ?? [])
+        Movies.append(viewModel.topRatedMovies?.results ?? [])
+        
     }
 }
+

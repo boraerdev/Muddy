@@ -19,6 +19,7 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        view.backgroundColor = .red
         setup()
     }
     
