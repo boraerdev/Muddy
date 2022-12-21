@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DiscoverDisplayLogic: class {
+protocol DiscoverDisplayLogic: AnyObject {
     func displaySomething(viewModel: Discover.Something.ViewModel)
 }
 

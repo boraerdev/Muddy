@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "animated-tab-bar",
+      "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Ramotion/animated-tab-bar.git",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
-        "revision" : "52174249fa7b296c0fce1114be8f34081b85ffc3",
-        "version" : "5.2.0"
+        "branch" : "master",
+        "revision" : "3e091ee962391a2ddcae5b18e17bc625f9d88d6e"
       }
     },
     {

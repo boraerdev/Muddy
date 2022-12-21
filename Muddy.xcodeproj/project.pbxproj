@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A87CAF029532DD200B98BE0 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A87CAEF29532DD200B98BE0 /* UIView+Extensions.swift */; };
+		0A87CAF22953492F00B98BE0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */; };
+		0A87CAF529534AA100B98BE0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0A87CAF429534AA100B98BE0 /* Kingfisher */; };
+		0A87CAF729535AC900B98BE0 /* MainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A87CAF629535AC900B98BE0 /* MainButton.swift */; };
+		0AC66D6E2953873700905542 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC66D6D2953873700905542 /* String+Extensions.swift */; };
+		0AC66D712953884F00905542 /* GenderList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC66D702953884F00905542 /* GenderList.swift */; };
 		0AF1A5392952021900895A65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A5382952021900895A65 /* AppDelegate.swift */; };
 		0AF1A53B2952021900895A65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A53A2952021900895A65 /* SceneDelegate.swift */; };
 		0AF1A5422952021900895A65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AF1A5412952021900895A65 /* Assets.xcassets */; };
 		0AF1A5452952021900895A65 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AF1A5432952021900895A65 /* LaunchScreen.storyboard */; };
 		0AF1A54F2952073A00895A65 /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A54E2952073A00895A65 /* MainTabbarController.swift */; };
-		0AF1A5522952080A00895A65 /* RAMAnimatedTabBarController in Frameworks */ = {isa = PBXBuildFile; productRef = 0AF1A5512952080A00895A65 /* RAMAnimatedTabBarController */; };
 		0AF1A555295229FA00895A65 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A554295229FA00895A65 /* Constants.swift */; };
 		0AF1A55D29522AC400895A65 /* HomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A55729522AC400895A65 /* HomePresenter.swift */; };
 		0AF1A55E29522AC400895A65 /* HomeWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A55829522AC400895A65 /* HomeWorker.swift */; };
@@ -33,7 +38,6 @@
 		0AF1A57B29522B9C00895A65 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A57529522B9C00895A65 /* ProfileViewController.swift */; };
 		0AF1A57C29522B9C00895A65 /* ProfileInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A57629522B9C00895A65 /* ProfileInteractor.swift */; };
 		0AF1A5802952385700895A65 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 0AF1A57F2952385700895A65 /* LBTATools */; };
-		0AF1A58229523F3B00895A65 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A58129523F3B00895A65 /* BackgroundView.swift */; };
 		0AF1A588295242DD00895A65 /* PopularMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A587295242DD00895A65 /* PopularMovies.swift */; };
 		0AF1A58B2952455B00895A65 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A58A2952455B00895A65 /* Helpers.swift */; };
 		0AF1A58F29525AB700895A65 /* APIServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A58E29525AB700895A65 /* APIServices.swift */; };
@@ -44,6 +48,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A87CAEF29532DD200B98BE0 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
+		0A87CAF629535AC900B98BE0 /* MainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButton.swift; sourceTree = "<group>"; };
+		0AC66D6D2953873700905542 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		0AC66D702953884F00905542 /* GenderList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderList.swift; sourceTree = "<group>"; };
 		0AF1A5352952021900895A65 /* Muddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Muddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF1A5382952021900895A65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AF1A53A2952021900895A65 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +79,6 @@
 		0AF1A57429522B9C00895A65 /* ProfileModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModels.swift; sourceTree = "<group>"; };
 		0AF1A57529522B9C00895A65 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		0AF1A57629522B9C00895A65 /* ProfileInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInteractor.swift; sourceTree = "<group>"; };
-		0AF1A58129523F3B00895A65 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		0AF1A587295242DD00895A65 /* PopularMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularMovies.swift; sourceTree = "<group>"; };
 		0AF1A58A2952455B00895A65 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		0AF1A58E29525AB700895A65 /* APIServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIServices.swift; sourceTree = "<group>"; };
@@ -85,7 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AF1A5522952080A00895A65 /* RAMAnimatedTabBarController in Frameworks */,
+				0A87CAF529534AA100B98BE0 /* Kingfisher in Frameworks */,
 				0AF1A5802952385700895A65 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,6 +101,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A87CAEE29532DBA00B98BE0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0A87CAEF29532DD200B98BE0 /* UIView+Extensions.swift */,
+				0AC66D6D2953873700905542 /* String+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		0AC66D6F2953884500905542 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0AC66D702953884F00905542 /* GenderList.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		0AF1A52C2952021900895A65 = {
 			isa = PBXGroup;
 			children = (
@@ -112,13 +137,13 @@
 		0AF1A5372952021900895A65 /* Muddy */ = {
 			isa = PBXGroup;
 			children = (
+				0A87CAEE29532DBA00B98BE0 /* Extensions */,
 				0AF1A5892952455200895A65 /* Helpers */,
 				0AF1A586295242D200895A65 /* Models */,
 				0AF1A57D29522BF100895A65 /* Components */,
 				0AF1A54D2952043000895A65 /* Scenes */,
 				0AF1A54C2952042B00895A65 /* Resoures */,
 				0AF1A5462952021900895A65 /* Info.plist */,
-				0AF1A554295229FA00895A65 /* Constants.swift */,
 			);
 			path = Muddy;
 			sourceTree = "<group>";
@@ -156,6 +181,7 @@
 		0AF1A55629522AB900895A65 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				0AC66D6F2953884500905542 /* View */,
 				0AF1A55729522AC400895A65 /* HomePresenter.swift */,
 				0AF1A55829522AC400895A65 /* HomeWorker.swift */,
 				0AF1A55929522AC400895A65 /* HomeRouter.swift */,
@@ -195,7 +221,8 @@
 		0AF1A57D29522BF100895A65 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				0AF1A58129523F3B00895A65 /* BackgroundView.swift */,
+				0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */,
+				0A87CAF629535AC900B98BE0 /* MainButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -217,6 +244,7 @@
 				0AF1A58A2952455B00895A65 /* Helpers.swift */,
 				0AF1A58E29525AB700895A65 /* APIServices.swift */,
 				0AF1A596295261C000895A65 /* MockData.swift */,
+				0AF1A554295229FA00895A65 /* Constants.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -238,8 +266,8 @@
 			);
 			name = Muddy;
 			packageProductDependencies = (
-				0AF1A5512952080A00895A65 /* RAMAnimatedTabBarController */,
 				0AF1A57F2952385700895A65 /* LBTATools */,
+				0A87CAF429534AA100B98BE0 /* Kingfisher */,
 			);
 			productName = Muddy;
 			productReference = 0AF1A5352952021900895A65 /* Muddy.app */;
@@ -270,8 +298,8 @@
 			);
 			mainGroup = 0AF1A52C2952021900895A65;
 			packageReferences = (
-				0AF1A5502952080A00895A65 /* XCRemoteSwiftPackageReference "animated-tab-bar" */,
 				0AF1A57E2952385700895A65 /* XCRemoteSwiftPackageReference "LBTATools" */,
+				0A87CAF329534AA100B98BE0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 0AF1A5362952021900895A65 /* Products */;
 			projectDirPath = "";
@@ -304,7 +332,6 @@
 				0AF1A56229522AC400895A65 /* HomeInteractor.swift in Sources */,
 				0AF1A56029522AC400895A65 /* HomeModels.swift in Sources */,
 				0AF1A55E29522AC400895A65 /* HomeWorker.swift in Sources */,
-				0AF1A58229523F3B00895A65 /* BackgroundView.swift in Sources */,
 				0AF1A57929522B9C00895A65 /* ProfileRouter.swift in Sources */,
 				0AF1A57B29522B9C00895A65 /* ProfileViewController.swift in Sources */,
 				0AF1A597295261C000895A65 /* MockData.swift in Sources */,
@@ -312,6 +339,7 @@
 				0AF1A56E29522B2F00895A65 /* DiscoverViewController.swift in Sources */,
 				0AF1A56B29522B2F00895A65 /* DiscoverWorker.swift in Sources */,
 				0AF1A56A29522B2F00895A65 /* DiscoverPresenter.swift in Sources */,
+				0AC66D6E2953873700905542 /* String+Extensions.swift in Sources */,
 				0AF1A57C29522B9C00895A65 /* ProfileInteractor.swift in Sources */,
 				0AF1A56F29522B2F00895A65 /* DiscoverInteractor.swift in Sources */,
 				0AF1A58B2952455B00895A65 /* Helpers.swift in Sources */,
@@ -326,7 +354,11 @@
 				0AF1A57729522B9C00895A65 /* ProfilePresenter.swift in Sources */,
 				0AF1A56C29522B2F00895A65 /* DiscoverRouter.swift in Sources */,
 				0AF1A54F2952073A00895A65 /* MainTabbarController.swift in Sources */,
+				0AC66D712953884F00905542 /* GenderList.swift in Sources */,
 				0AF1A59329525C4500895A65 /* TopRatedMovies.swift in Sources */,
+				0A87CAF22953492F00B98BE0 /* HomeHeaderView.swift in Sources */,
+				0A87CAF729535AC900B98BE0 /* MainButton.swift in Sources */,
+				0A87CAF029532DD200B98BE0 /* UIView+Extensions.swift in Sources */,
 				0AF1A53B2952021900895A65 /* SceneDelegate.swift in Sources */,
 				0AF1A58F29525AB700895A65 /* APIServices.swift in Sources */,
 			);
@@ -540,12 +572,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0AF1A5502952080A00895A65 /* XCRemoteSwiftPackageReference "animated-tab-bar" */ = {
+		0A87CAF329534AA100B98BE0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Ramotion/animated-tab-bar.git";
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 		0AF1A57E2952385700895A65 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
@@ -559,10 +591,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0AF1A5512952080A00895A65 /* RAMAnimatedTabBarController */ = {
+		0A87CAF429534AA100B98BE0 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0AF1A5502952080A00895A65 /* XCRemoteSwiftPackageReference "animated-tab-bar" */;
-			productName = RAMAnimatedTabBarController;
+			package = 0A87CAF329534AA100B98BE0 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		0AF1A57F2952385700895A65 /* LBTATools */ = {
 			isa = XCSwiftPackageProductDependency;

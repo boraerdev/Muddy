@@ -8,6 +8,9 @@
 
 import UIKit
 import LBTATools
+import Swinflate
+import Combine
+
 
 protocol HomeDisplayLogic: AnyObject {
     func displayMovies(viewModel: Home.HomeMovies.ViewModel)
@@ -18,9 +21,18 @@ final class HomeViewController: UIViewController {
     var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
     
     //UI
-    let bgView = BackgrounView()
-    var Movies: [[Result]] = [[]]
+    private lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.contentSize = .init(width: view.frame.width, height: 3000)
+        scroll.isScrollEnabled = true
+        scroll.showsVerticalScrollIndicator = false
+        return scroll
+    }()
 
+    //DEF
+    lazy var movies = CurrentValueSubject<[MovieGender : [Result]], Never>([:])
+    let cancellable = Set<AnyCancellable>()
+    
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -50,12 +62,13 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchMovies()
-        view.addSubview(bgView)
-        bgView.fillSuperview()
-        
+        view.addSubview(scrollView)
+        scrollView.fillSuperview()
+        topNavigaion()
     }
     
-    // MARK: Do something
+    
+    // MARK: Fetch Movies
     func fetchMovies() {
         let request = Home.HomeMovies.Request()
         Task { await interactor?.fetchHomeMovies(request: request) }
@@ -66,11 +79,78 @@ final class HomeViewController: UIViewController {
 extension HomeViewController: HomeDisplayLogic {
     func displayMovies(viewModel: Home.HomeMovies.ViewModel) {
 
-        Movies.append(viewModel.nowPlayingMovies?.results ?? [])
-        Movies.append(viewModel.popularMovies?.results ?? [])
-        Movies.append(viewModel.upcomingMovies?.results ?? [])
-        Movies.append(viewModel.topRatedMovies?.results ?? [])
+        var list: [MovieGender: [Result]] = [:]
+        list[.popular] = viewModel.popularMovies?.results
+        list[.nowPlaying] = viewModel.nowPlayingMovies?.results
+        list[.topRated] = viewModel.topRatedMovies?.results
+        list[.upcoming] = viewModel.upcomingMovies?.results
+        movies.send(list)
+        
+        DispatchQueue.main.async { [unowned self] in
+            addHeader()
+        }
         
     }
+}
+
+//MARK: UI Funcs
+extension HomeViewController {
+    
+    private func topNavigaion() {
+        let container = UIView()
+        view.addSubview(container)
+        container.anchor(
+            top: scrollView.topAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor,
+            size: .init(width: view.frame.width, height: 100)
+        )
+        
+        let titleLabel = UILabel(
+            text: "Welcome Back",
+            font: .systemFont(ofSize: 22, weight: .bold),
+            textColor: .white,
+            textAlignment: .center,
+            numberOfLines: 1
+        )
+        
+        let searchImage = UIImageView(
+            image: .init(systemName: "magnifyingglass"),
+            contentMode: .scaleAspectFit)
+        searchImage.tintColor = .white
+        
+        container.hstack(
+            titleLabel,
+            UIView(),
+            searchImage.withSize(.init(width: 25, height: 25))
+        ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16))
+        
+    }
+    
+    private func addHeader() {
+        let vc = HomeHeaderView(movie: movies[.popular]?.first ?? MockData.Result)
+        addChild(vc)
+        vc.didMove(toParent: self)
+        let container = UIView(backgroundColor: .clear)
+        
+        lazy var popularList: GenderList = {
+            let list = GenderList(scrollDirection: .horizontal)
+            
+            return list
+        }()
+        
+        container.stack(
+            popularList.view.withHeight(200)
+        )
+        
+        scrollView.stack(
+            vc.view.withSize(.init(width: self.view.frame.width, height: 500)),
+            container,
+            spacing: 10
+        )
+        
+    }
+
 }
 

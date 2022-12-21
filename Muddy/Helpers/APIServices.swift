@@ -12,6 +12,7 @@ enum APIEndpoint {
     case upcomingMovies
     case nowPlayingMovies
     case topRatedMovies
+    case image(path: String)
 }
 
 extension APIEndpoint {
@@ -25,7 +26,8 @@ extension APIEndpoint {
             return BASE_URL + "/movie/now_playing" + "?api_key=" + KEY
         case .topRatedMovies:
             return BASE_URL + "/movie/top_rated" + "?api_key=" + KEY
+        case .image(let path):
+            return IMAGE_BASE + path
         }
-        
     }
 }

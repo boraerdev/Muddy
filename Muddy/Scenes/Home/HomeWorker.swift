@@ -13,11 +13,7 @@ class HomeWorker {
         guard let url = URL(string: urlString) else {return nil}
         do {
             let (data,_) = try await URLSession.shared.data(from: url)
-            let populars = try JSONDecoder().decode(T.self, from: data)
-            if let pop = populars as? PopularMovies {
-                print(pop.results.count)
-            }
-            return populars
+            return try JSONDecoder().decode(T.self, from: data)
         } catch { return nil }
     }
 }
