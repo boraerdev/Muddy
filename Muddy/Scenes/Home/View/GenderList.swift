@@ -33,11 +33,12 @@ class MovieInGenderCell: LBTAListCell<Result> {
 class GenderList: LBTAListController<MovieInGenderCell, Result>, UICollectionViewDelegateFlowLayout {
     
     override func viewDidLoad() {
-        
+        view.backgroundColor = .yellow
+        items = [MockData.Result,MockData.Result,MockData.Result]
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: 135, height: 200)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        0
     }
     
 }

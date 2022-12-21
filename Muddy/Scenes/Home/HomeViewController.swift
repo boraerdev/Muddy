@@ -25,13 +25,27 @@ final class HomeViewController: UIViewController {
         let scroll = UIScrollView()
         scroll.contentSize = .init(width: view.frame.width, height: 3000)
         scroll.isScrollEnabled = true
-        scroll.showsVerticalScrollIndicator = false
+        scroll.showsVerticalScrollIndicator = true
         return scroll
+    }()
+    
+    private lazy var collectionView: UICollectionView = {
+        
+        let cv = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UICollectionViewFlowLayout()
+        )
+        
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        return cv
     }()
 
     //DEF
-    lazy var movies = CurrentValueSubject<[MovieGender : [Result]], Never>([:])
-    let cancellable = Set<AnyCancellable>()
+    lazy var movies = PassthroughSubject<[MovieGender : [Result]], Never>()
+    var cancellable = Set<AnyCancellable>()
+    
     
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -65,6 +79,7 @@ final class HomeViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.fillSuperview()
         topNavigaion()
+        bindData()
     }
     
     
@@ -86,15 +101,19 @@ extension HomeViewController: HomeDisplayLogic {
         list[.upcoming] = viewModel.upcomingMovies?.results
         movies.send(list)
         
-        DispatchQueue.main.async { [unowned self] in
-            addHeader()
-        }
-        
     }
 }
 
 //MARK: UI Funcs
 extension HomeViewController {
+    
+    private func bindData() {
+        movies.sink { [unowned self] result in
+            DispatchQueue.main.async {
+                self.addHeader(resultMovies: result)
+            }
+        }.store(in: &cancellable)
+    }
     
     private func topNavigaion() {
         let container = UIView()
@@ -123,34 +142,45 @@ extension HomeViewController {
         container.hstack(
             titleLabel,
             UIView(),
-            searchImage.withSize(.init(width: 25, height: 25))
+            searchImage.withWidth(25)
         ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16))
         
     }
     
-    private func addHeader() {
-        let vc = HomeHeaderView(movie: movies[.popular]?.first ?? MockData.Result)
+    private func addHeader(resultMovies: [MovieGender:[Result]]) {
+        
+        let vc = HomeHeaderView(movie: resultMovies[.popular]?.first ?? MockData.Result)
         addChild(vc)
         vc.didMove(toParent: self)
-        let container = UIView(backgroundColor: .clear)
-        
-        lazy var popularList: GenderList = {
-            let list = GenderList(scrollDirection: .horizontal)
-            
-            return list
-        }()
+        let container = UIView(backgroundColor: .yellow)
         
         container.stack(
-            popularList.view.withHeight(200)
+            collectionView
         )
         
         scrollView.stack(
             vc.view.withSize(.init(width: self.view.frame.width, height: 500)),
-            container,
+            container.withSize(.init(width: view.frame.width, height: 1000)),
+            UIView(),
             spacing: 10
+            
         )
         
     }
 
+}
+
+extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.backgroundColor = .red
+        return cell
+    }
+    
+    
 }
 
