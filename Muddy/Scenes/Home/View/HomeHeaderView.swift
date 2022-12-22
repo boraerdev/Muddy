@@ -51,12 +51,7 @@ class HomeHeaderView: UIViewController {
         insertGradient()
     }
     
-    private func insertGradient() {
-        imageView.insertGradient(colors: [.black, .clear],
-                                 startPoint: .init(x: 0.5, y: 1),
-                                 endPoint: .init(x: 0.5, y: 0))
-    }
-    
+    //UI Funcs
     private func layoutViews() {
         let container = UIView()
         let title = UILabel(text: movie.title,
@@ -90,8 +85,13 @@ class HomeHeaderView: UIViewController {
         
         view.addSubview(container)
         container.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 16, bottom: 16, right: 0))
-
         
+    }
+    
+    private func insertGradient() {
+        imageView.insertGradient(colors: [.black, .clear],
+                                 startPoint: .init(x: 0.5, y: 1),
+                                 endPoint: .init(x: 0.5, y: 0))
     }
     
     private func fetchImage() {

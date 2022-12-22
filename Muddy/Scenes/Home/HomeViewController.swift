@@ -30,6 +30,15 @@ final class HomeViewController: UIViewController {
         return vc
     }()
     
+    private lazy var searchField = IndentedTextField(
+        placeholder: "Search Movie, Gender Actor...",
+        padding: 10,
+        cornerRadius: 20,
+        keyboardType: .default,
+        backgroundColor: .clear,
+        isSecureTextEntry: false
+    )
+    
     private lazy var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection in
             return HomeViewController.createSectionLayout(section: sectionIndex)
@@ -49,7 +58,7 @@ final class HomeViewController: UIViewController {
         cv.showsVerticalScrollIndicator = false
         return cv
     }()
-
+    
     //DEF
     lazy var movies: [MovieGender : [Result]] = [.popular:[MockData.Result]] {
         didSet {
@@ -104,6 +113,7 @@ final class HomeViewController: UIViewController {
     
 }
 
+//MARK: Display Funcs
 extension HomeViewController: HomeDisplayLogic {
     func displayMovies(viewModel: Home.HomeMovies.ViewModel) {
 
@@ -116,47 +126,13 @@ extension HomeViewController: HomeDisplayLogic {
     }
 }
 
+extension HomeViewController {
+    @objc func didTapSearch() {
+    }
+}
+
 //MARK: UI Funcs
 extension HomeViewController {
-    
-    private func topNavigaion() {
-        DispatchQueue.main.async { [unowned self] in
-            let container = UIView()
-            view.addSubview(container)
-            
-            container.anchor(
-                top: view.safeAreaLayoutGuide.topAnchor,
-                leading: view.leadingAnchor,
-                bottom: nil,
-                trailing: view.trailingAnchor,
-                size: .init(width: view.frame.width, height: 80)
-            )
-            
-            let titleLabel = UILabel(
-                text: "Welcome Back",
-                font: .systemFont(ofSize: 22, weight: .bold),
-                textColor: .white,
-                textAlignment: .center,
-                numberOfLines: 1
-            )
-            
-            let searchImage = UIImageView(
-                image: .init(systemName: "magnifyingglass"),
-                contentMode: .scaleAspectFit)
-            searchImage.tintColor = .white
-            
-            container.stack(
-                container.hstack(
-                    titleLabel,
-                    UIView(),
-                    searchImage.withWidth(25)
-                ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16)),
-                sliderMenuCollectionView,
-                distribution: .fillEqually
-            )
-            
-        }
-    }
     
     private func setupUI(resultMovies: [MovieGender:[Result]]) {
 
@@ -164,13 +140,54 @@ extension HomeViewController {
             homeCollectionView
         )
         
-        view.insertGradient(colors: [.black,.clear], startPoint: .init(x: 0.5, y: 0.1), endPoint: .init(x: 0.5, y: 0.25))
+        view.insertGradient(colors: [.black,.clear], startPoint: .init(x: 0.5, y: 0.15), endPoint: .init(x: 0.5, y: 0.35))
         topNavigaion()
+    }
+    
+    private func topNavigaion() {
+        DispatchQueue.main.async { [unowned self] in
+            let container = UIView()
+            
+            let searchBtn = UIButton(
+                image: .init(systemName: "magnifyingglass")!,
+                tintColor: .white,
+                target: self,
+                action: #selector(didTapSearch)
+            )
+            
+            //Layout Header Container
+            view.addSubview(container)
+            container.anchor(
+                top: view.safeAreaLayoutGuide.topAnchor,
+                leading: view.leadingAnchor,
+                bottom: nil,
+                trailing: view.trailingAnchor,
+                size: .init(width: view.frame.width, height: 85)
+            )
+
+            let searchContainer = UIView(backgroundColor: .clear)
+            searchContainer.hstack(
+                searchField,
+                searchBtn.withWidth(25),
+                spacing: 10,
+                distribution: .fill
+            ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16))
+            
+            
+            container.stack(
+                searchContainer,
+                sliderMenuCollectionView,
+                spacing: 5,
+                distribution: .fillEqually
+            )
+            
+        }
     }
     
 }
 
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+//MARK: CollectionView DataSource
+extension HomeViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         switch collectionView{
@@ -204,14 +221,11 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         if collectionView == sliderMenuCollectionView {
             return movies.count
         }
-        
         return 0
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let section = indexPath.section
         
         if
             collectionView == homeCollectionView,
@@ -256,6 +270,24 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         
     }
     
+}
+
+//MARK: CollectionView Delegate
+extension HomeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == sliderMenuCollectionView {
+            let myPath: IndexPath = .init(row: 0, section: indexPath.row)
+//            homeCollectionView.scrollToItem(at: myPath, at: .centeredVertically, animated: true)
+//            collectionView.deselectItem(at: myPath, animated: true)
+            collectionView.scrollToItem(at: .init(row: indexPath.row, section: 0), at: .centeredHorizontally, animated: true)
+            genderAllDataView()
+            collectionView.deselectItem(at: myPath, animated: true)
+        }
+    }
+}
+
+//MARK: FlowLayout Delegate
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == sliderMenuCollectionView {
             let estimatedCell = SliderMenuCell(frame: .init(x: 0, y: 0, width: 1000, height: 40))
@@ -273,19 +305,12 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         }
         return .init(top: 0, left: 0, bottom: 0, right: 0)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == sliderMenuCollectionView {
-            let myPath: IndexPath = .init(row: 0, section: indexPath.row)
-            homeCollectionView.scrollToItem(at: myPath, at: .centeredVertically, animated: true)
-            collectionView.deselectItem(at: myPath, animated: true)
-        }
-    }
-    
 }
 
+//MARK: Helper Funcs
 extension HomeViewController {
     static func GenerateSection(model: MovieGender) -> NSCollectionLayoutSection {
+        //Item
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
@@ -299,9 +324,7 @@ extension HomeViewController {
             bottom: 2,
             trailing: 4)
         
-        
         //Group
-        
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .absolute(135),
@@ -310,9 +333,8 @@ extension HomeViewController {
             count: 1
         )
         
+        //Section
         let section = NSCollectionLayoutSection(group: group)
-        
-        section.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
         
         let footerHeaderSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -323,10 +345,9 @@ extension HomeViewController {
             layoutSize: footerHeaderSize,
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top)
-        
         header.contentInsets = .init(top: 0, leading: -16, bottom: 0, trailing: -16)
         
-        //Section
+        section.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
         section.orthogonalScrollingBehavior = .groupPaging
         section.boundarySupplementaryItems = [header]
         return section
