@@ -8,18 +8,28 @@
 import Foundation
 
 enum APIEndpoint {
-    case popularMovies
-    case upcomingMovies
-    case nowPlayingMovies
-    case topRatedMovies
-    case orgImage(path: String)
-    case lowPosterImage(path: String)
+    
+    enum Movie {
+        case popularMovies
+        case upcomingMovies
+        case nowPlayingMovies
+        case topRatedMovies
+    }
+    
+    enum Image {
+        case orgImage(path: String)
+        case lowPosterImage(path: String)
+        case mediumBackdropImage(path: String)
+
+    }
+    
 }
 
-extension APIEndpoint {
+
+extension APIEndpoint.Movie {
     var toString: String {
         switch self {
-        case .popularMovies:
+        case APIEndpoint.Movie.popularMovies:
             return BASE_URL + "/movie/popular" + "?api_key=" + KEY
         case .upcomingMovies:
             return BASE_URL + "/movie/upcoming" + "?api_key=" + KEY
@@ -27,10 +37,19 @@ extension APIEndpoint {
             return BASE_URL + "/movie/now_playing" + "?api_key=" + KEY
         case .topRatedMovies:
             return BASE_URL + "/movie/top_rated" + "?api_key=" + KEY
+        }
+    }
+}
+
+extension APIEndpoint.Image {
+    var toString: String {
+        switch self {
         case .orgImage(let path):
             return O_IMAGE_BASE + path
         case .lowPosterImage(let path):
             return L_IMAGE_BASE + path
+        case .mediumBackdropImage(path: let path):
+            return M_IMAGE_BASE_BACKDROP + path
         }
     }
 }

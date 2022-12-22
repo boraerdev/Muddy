@@ -31,7 +31,7 @@ final class HomeViewController: UIViewController {
     }()
     
     private lazy var searchField = IndentedTextField(
-        placeholder: "Search Movie, Gender Actor...",
+        placeholder: "Search Movie, Genre, Actor...",
         padding: 10,
         cornerRadius: 20,
         keyboardType: .default,
@@ -277,11 +277,14 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == sliderMenuCollectionView {
             let myPath: IndexPath = .init(row: 0, section: indexPath.row)
-//            homeCollectionView.scrollToItem(at: myPath, at: .centeredVertically, animated: true)
-//            collectionView.deselectItem(at: myPath, animated: true)
             collectionView.scrollToItem(at: .init(row: indexPath.row, section: 0), at: .centeredHorizontally, animated: true)
-            genderAllDataView()
             collectionView.deselectItem(at: myPath, animated: true)
+        }
+        
+        if collectionView == homeCollectionView {
+            let movie = movies[MovieGender(rawValue: indexPath.section) ?? .popular]?[indexPath.row] ?? MockData.Result
+            interactor?.setSelectedMovie(movie: movie)
+            router?.routeToDetail(target: MovieDetailViewController())
         }
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol HomeRoutingLogic {
-    //func routeToSomewhere(segue: UIStoryboardSegue?)
+    func routeToDetail(target: MovieDetailViewController)
 }
 
 protocol HomeDataPassing {
@@ -47,4 +47,24 @@ class HomeRouter: NSObject, HomeRoutingLogic, HomeDataPassing {
     //{
     //  destination.name = source.name
     //}
+    
+    // MARK: Routing
+    func routeToDetail(target: MovieDetailViewController) {
+        var destinationDS = target.router!.dataStore!
+        passDataToMovieDetail(source: dataStore!, destination: &destinationDS)
+        navigateToMovieDetail(source: viewController!, destination: target)
+    }
+
+    // MARK: Navigation
+    func navigateToMovieDetail(source: HomeViewController, destination: MovieDetailViewController)
+    {
+        destination.modalPresentationStyle = .fullScreen
+        source.show(destination, sender: nil)
+    }
+    
+    // MARK: Passing data
+    func passDataToMovieDetail(source: HomeDataStore, destination: inout MovieDetailDataStore)
+    {
+        destination.selectedMovie = source.selectedMovie ?? MockData.Result
+    }
 }

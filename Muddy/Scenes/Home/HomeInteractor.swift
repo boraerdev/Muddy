@@ -10,6 +10,7 @@ import UIKit
 
 protocol HomeBusinessLogic {
     func fetchHomeMovies(request: Home.HomeMovies.Request) async
+    func setSelectedMovie(movie: Result)
 }
 
 protocol HomeDataStore {
@@ -17,9 +18,10 @@ protocol HomeDataStore {
     var upcomingMovies: UpcomingMovies? {get set}
     var topRatedMovies: TopRatedMovies? {get set}
     var nowPlayingMovies: NowPlayingMovies? {get set}
+    var selectedMovie: Result? {get set}
 }
 
-class HomeInteractor: HomeDataStore {
+class HomeInteractor: HomeBusinessLogic, HomeDataStore {
     
     var presenter: HomePresentationLogic?
     var worker: HomeWorker?
@@ -28,22 +30,24 @@ class HomeInteractor: HomeDataStore {
     var upcomingMovies: UpcomingMovies?
     var topRatedMovies: TopRatedMovies?
     var popularMovies: PopularMovies?
+    var selectedMovie: Result?
     
-}
-
-extension HomeInteractor: HomeBusinessLogic {
     func fetchHomeMovies(request: Home.HomeMovies.Request) async {
         let worker = HomeWorker()
-        popularMovies = try? await worker.downloadHomeMovies(urlString: APIEndpoint.popularMovies.toString)
+        popularMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.popularMovies.toString)
         
-        topRatedMovies = try? await worker.downloadHomeMovies(urlString: APIEndpoint.topRatedMovies.toString)
+        topRatedMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.topRatedMovies.toString)
         
-        upcomingMovies = try? await worker.downloadHomeMovies(urlString: APIEndpoint.upcomingMovies.toString)
+        upcomingMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.upcomingMovies.toString)
         
-        nowPlayingMovies = try? await worker.downloadHomeMovies(urlString: APIEndpoint.nowPlayingMovies.toString)
+        nowPlayingMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.nowPlayingMovies.toString)
         
         let response = Home.HomeMovies.Response(popularMovies: popularMovies, upcomingMovies: upcomingMovies, topRatedMovies: topRatedMovies, nowPlayingMovies: nowPlayingMovies)
         presenter?.presentMovies(response: response)
+    }
+    
+    func setSelectedMovie(movie: Result) {
+        selectedMovie = movie
     }
     
 }

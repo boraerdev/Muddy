@@ -9,7 +9,7 @@
 import UIKit
 
 class HomeWorker {
-    func downloadHomeMovies<T: Codable>(urlString: String) async throws -> T? {
+    func downloadMovieList<T: Codable>(urlString: String) async throws -> T? {
         guard let url = URL(string: urlString) else {return nil}
         do {
             let (data,_) = try await URLSession.shared.data(from: url)

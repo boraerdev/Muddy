@@ -95,7 +95,7 @@ class HomeHeaderView: UIViewController {
     }
     
     private func fetchImage() {
-        guard let url = URL(string: APIEndpoint.orgImage(path: movie.backdropPath).toString) else {return}
+        guard let url = URL(string: APIEndpoint.Image.orgImage(path: movie.backdropPath).toString) else {return}
         imageView.kf.setImage(with: url)
     }
     
