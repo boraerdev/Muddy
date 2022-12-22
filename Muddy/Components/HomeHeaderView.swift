@@ -20,7 +20,7 @@ class HomeHeaderView: UIViewController {
     
     private lazy var showBtn: MainButton = {
         let btn = MainButton(title: "Show",
-                             imgName: "play.fill",
+                             imgName: "playpause.fill",
                              tintColor: .white,
                              backgroundColor: .clear)
         btn.withBorder(width: 1, color: .white)
@@ -55,22 +55,47 @@ class HomeHeaderView: UIViewController {
         imageView.insertGradient(colors: [.black, .clear],
                                  startPoint: .init(x: 0.5, y: 1),
                                  endPoint: .init(x: 0.5, y: 0))
-        
-        imageView.insertGradient(colors: [.black,.clear],
-                                 startPoint: .init(x: 0.5, y: 0),
-                                 endPoint: .init(x: 0.5, y: 0.2))
     }
     
     private func layoutViews() {
-        NSLayoutConstraint.activate([
-            showBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            showBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        showBtn.withSize(.init(width: 150, height: 50))
+        let container = UIView()
+        let title = UILabel(text: movie.title,
+                            font: .systemFont(ofSize: 17, weight: .regular),
+                            textColor: .white,
+                            textAlignment: .left,
+                            numberOfLines: 2)
+        
+        let relaseDate = UILabel(text: "\(movie.releaseDate)",
+                        font: .systemFont(ofSize: 13, weight: .light),
+                        textColor: .secondaryLabel,
+                        numberOfLines: 1)
+        
+        let voteAvarage = UILabel(text: "\(movie.voteAverage)",
+                        font: .systemFont(ofSize: 13, weight: .light),
+                        textColor: .red,
+                        numberOfLines: 1)
+
+        let overview = UILabel(text: "\(movie.overview)",
+                        font: .systemFont(ofSize: 13, weight: .light),
+                        textColor: .secondaryLabel,
+                        numberOfLines: 2)
+        container.stack(
+            container.hstack(title, voteAvarage, spacing: 10),
+            overview.withWidth(300),
+            showBtn.withSize(.init(width: 150, height: 50)),
+            relaseDate,
+            spacing: 8,
+            alignment: .leading
+        )
+        
+        view.addSubview(container)
+        container.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 16, bottom: 16, right: 0))
+
+        
     }
     
     private func fetchImage() {
-        guard let url = URL(string: APIEndpoint.image(path: movie.backdropPath).toString) else {return}
+        guard let url = URL(string: APIEndpoint.orgImage(path: movie.backdropPath).toString) else {return}
         imageView.kf.setImage(with: url)
     }
     

@@ -8,37 +8,75 @@
 import Foundation
 import LBTATools
 import UIKit
+import Kingfisher
 
-class MovieInGenderCell: LBTAListCell<Result> {
+class MainHomeHeader: UICollectionReusableView {
     
-    private lazy var movieTitle = UILabel(textColor: .black)
+    static let identifier = "MainHomeHeader"
     
-    override var item: Result! {
-        didSet {
-            movieTitle.text = item.title
+    private lazy var genderTitle = UILabel(font: .systemFont(ofSize: 17, weight: .bold), textColor: .white, textAlignment: .left)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        clipsToBounds = true
+        
+    }
+    
+    func prepareForMainHeader(movie: Result) {
+        
+        let container = UIView(backgroundColor: .black)
+        
+        container.hstack(UIView().withWidth(16), genderTitle.withHeight(50), UIView())
+        
+        DispatchQueue.main.async { [unowned self] in
+            genderTitle.text = "Popular"
+            let vc = HomeHeaderView(movie: movie)
+            stack(
+                vc.view,
+                container.withHeight(50)
+            )
         }
+        
+    }
+    
+    func prepareForTitle(gender: MovieGender) {
+        DispatchQueue.main.async { [unowned self] in
+            genderTitle.text = gender.toString
+            hstack(UIView().withWidth(16), genderTitle, UIView())
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class HomeGenderListCell: UICollectionViewCell {
+    
+    static let identifier = "HomeGenderListCell"
+    private lazy var movieImage = UIImageView(image: nil, contentMode: .scaleAspectFill)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .white
+        layer.cornerRadius = 8
+        layer.cornerCurve = .continuous
+        clipsToBounds = true
+        stack(movieImage)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(movie: Result) {
+        guard let url = URL(string: APIEndpoint.lowPosterImage(path: movie.posterPath).toString) else {return}
+        movieImage.kf.setImage(with: url)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        movieTitle.text = nil
-    }
-    
-    override func setupViews() {
-        super.setupViews()
-        backgroundColor = .white
+        movieImage.image = nil
     }
 }
 
-class GenderList: LBTAListController<MovieInGenderCell, Result>, UICollectionViewDelegateFlowLayout {
-    
-    override func viewDidLoad() {
-        view.backgroundColor = .yellow
-        items = [MockData.Result,MockData.Result,MockData.Result]
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        0
-    }
-    
-}
