@@ -8,9 +8,6 @@
 
 import UIKit
 import LBTATools
-import Swinflate
-import Combine
-
 
 protocol HomeDisplayLogic: AnyObject {
     func displayMovies(viewModel: Home.HomeMovies.ViewModel)
@@ -21,16 +18,19 @@ final class HomeViewController: UIViewController {
     var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
     
     //UI
-    private lazy var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        scroll.contentSize = .init(width: view.frame.width, height: 3000)
-        scroll.isScrollEnabled = true
-        scroll.showsVerticalScrollIndicator = false
-        scroll.bounces = false
-        return scroll
+    private lazy var sliderMenuCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let vc = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        vc.delegate = self
+        vc.showsHorizontalScrollIndicator = false
+        vc.dataSource = self
+        vc.backgroundColor = .clear
+        vc.register(SliderMenuCell.self, forCellWithReuseIdentifier: SliderMenuCell.identifier)
+        return vc
     }()
     
-    private lazy var collectionView: UICollectionView = {
+    private lazy var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection in
             return HomeViewController.createSectionLayout(section: sectionIndex)
         }
@@ -51,10 +51,12 @@ final class HomeViewController: UIViewController {
     }()
 
     //DEF
-    lazy var movies: [MovieGender : [Result]] = [:] {
+    lazy var movies: [MovieGender : [Result]] = [.popular:[MockData.Result]] {
         didSet {
-            DispatchQueue.main.async {
-                self.setupUI(resultMovies: self.movies)
+            DispatchQueue.main.async { [unowned self] in
+                setupUI(resultMovies: self.movies)
+                homeCollectionView.reloadData()
+                sliderMenuCollectionView.reloadData()
             }
         }
     }
@@ -88,9 +90,6 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchMovies()
-        view.addSubview(scrollView)
-        scrollView.fillSuperview()
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -114,7 +113,6 @@ extension HomeViewController: HomeDisplayLogic {
         list[.topRated] = viewModel.topRatedMovies?.results
         list[.upcoming] = viewModel.upcomingMovies?.results
         movies = list
-        collectionView.reloadData()
     }
 }
 
@@ -127,11 +125,11 @@ extension HomeViewController {
             view.addSubview(container)
             
             container.anchor(
-                top: scrollView.topAnchor,
-                leading: scrollView.leadingAnchor,
+                top: view.safeAreaLayoutGuide.topAnchor,
+                leading: view.leadingAnchor,
                 bottom: nil,
-                trailing: scrollView.trailingAnchor,
-                size: .init(width: view.frame.width, height: 100)
+                trailing: view.trailingAnchor,
+                size: .init(width: view.frame.width, height: 80)
             )
             
             let titleLabel = UILabel(
@@ -147,29 +145,146 @@ extension HomeViewController {
                 contentMode: .scaleAspectFit)
             searchImage.tintColor = .white
             
-            container.hstack(
-                titleLabel,
-                UIView(),
-                searchImage.withWidth(25)
-            ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16))
+            container.stack(
+                container.hstack(
+                    titleLabel,
+                    UIView(),
+                    searchImage.withWidth(25)
+                ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16)),
+                sliderMenuCollectionView,
+                distribution: .fillEqually
+            )
+            
         }
     }
     
     private func setupUI(resultMovies: [MovieGender:[Result]]) {
-        
-        let vc = HomeHeaderView(movie: resultMovies[.popular]?.first ?? MockData.Result)
-        addChild(vc)
-        vc.didMove(toParent: self)
 
         view.stack(
-            collectionView
+            homeCollectionView
         )
         
         view.insertGradient(colors: [.black,.clear], startPoint: .init(x: 0.5, y: 0.1), endPoint: .init(x: 0.5, y: 0.25))
         topNavigaion()
+    }
+    
+}
+
+extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        switch collectionView{
+        case homeCollectionView:
+            return movies.count
+        case sliderMenuCollectionView:
+            return 1
+        default:
+            return 1
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+        if collectionView == homeCollectionView {
+            switch MovieGender(rawValue: section) {
+                case .popular:
+                    return movies[.popular]?.count ?? 0
+                case .nowPlaying:
+                    return movies[.nowPlaying]?.count ?? 0
+                case .upcoming:
+                    return movies[.upcoming]?.count ?? 0
+                case .topRated:
+                    return movies[.topRated]?.count ?? 0
+                    
+                default:
+                    return movies[.popular]?.count ?? 0
+                }
+        }
+        
+        if collectionView == sliderMenuCollectionView {
+            return movies.count
+        }
+        
+        return 0
         
     }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let section = indexPath.section
+        
+        if
+            collectionView == homeCollectionView,
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeGenderListCell.identifier, for: indexPath) as? HomeGenderListCell
+        {
+            switch MovieGender(rawValue: indexPath.section) {
+            case .popular:
+                cell.configure(movie: movies[.popular]?[indexPath.item] ?? MockData.Result)
+            case .nowPlaying:
+                cell.configure(movie: movies[.nowPlaying]?[indexPath.item] ?? MockData.Result)
+            case .upcoming:
+                cell.configure(movie: movies[.upcoming]?[indexPath.item] ?? MockData.Result)
+            case .topRated:
+                cell.configure(movie: movies[.topRated]?[indexPath.item] ?? MockData.Result)
+            default:
+                cell.configure(movie: movies[.popular]?[indexPath.row] ?? MockData.Result)
+            }
+            return cell
+        }
+        
+        else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SliderMenuCell.identifier, for: indexPath) as? SliderMenuCell else {
+                return .init()
+            }
+            cell.configure(MovieGender(rawValue: indexPath.row) ?? .popular)
+            return cell
+        }
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHomeHeader.identifier, for: indexPath) as? MainHomeHeader else {return .init()}
+            switch MovieGender(rawValue: indexPath.section) {
+            case .popular:
+                header.prepareForMainHeader(movie: movies[.popular]?.first ?? MockData.Result)
+            default:
+                header.prepareForTitle(gender: MovieGender(rawValue: indexPath.section) ?? .popular)
+            }
+            
+            return header
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == sliderMenuCollectionView {
+            let estimatedCell = SliderMenuCell(frame: .init(x: 0, y: 0, width: 1000, height: 40))
+            estimatedCell.configure(MovieGender(rawValue: indexPath.row) ?? .popular)
+            estimatedCell.layoutIfNeeded()
+            let estimatedSizeCell = estimatedCell.systemLayoutSizeFitting(.init(width: 1000, height: 40))
+            return .init(width: estimatedSizeCell.width, height: 40)
+        }
+        return .init(width: 0, height: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if collectionView == sliderMenuCollectionView {
+            return .init(top: 0, left: 16, bottom: 0, right: 16)
+        }
+        return .init(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == sliderMenuCollectionView {
+            let myPath: IndexPath = .init(row: 0, section: indexPath.row)
+            homeCollectionView.scrollToItem(at: myPath, at: .centeredVertically, animated: true)
+            collectionView.deselectItem(at: myPath, animated: true)
+        }
+    }
+    
+}
+
+extension HomeViewController {
     static func GenerateSection(model: MovieGender) -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
@@ -240,63 +355,4 @@ extension HomeViewController {
         }
     }
 
-
 }
-
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        movies.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch MovieGender(rawValue: section) {
-        case .popular:
-            return movies[.popular]?.count ?? 0
-        case .nowPlaying:
-            return movies[.nowPlaying]?.count ?? 0
-        case .upcoming:
-            return movies[.upcoming]?.count ?? 0
-        case .topRated:
-            return movies[.topRated]?.count ?? 0
-            
-        default:
-            return movies[.popular]?.count ?? 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeGenderListCell.identifier, for: indexPath) as? HomeGenderListCell else {return UICollectionViewCell()}
-        switch MovieGender(rawValue: indexPath.section) {
-        case .popular:
-            cell.configure(movie: movies[.popular]?[indexPath.item] ?? MockData.Result)
-        case .nowPlaying:
-            cell.configure(movie: movies[.nowPlaying]?[indexPath.item] ?? MockData.Result)
-        case .upcoming:
-            cell.configure(movie: movies[.upcoming]?[indexPath.item] ?? MockData.Result)
-        case .topRated:
-            cell.configure(movie: movies[.topRated]?[indexPath.item] ?? MockData.Result)
-            
-        default:
-            cell.configure(movie: movies[.popular]?[indexPath.row] ?? MockData.Result)
-            
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHomeHeader.identifier, for: indexPath) as? MainHomeHeader else {return .init()}
-        
-        switch MovieGender(rawValue: indexPath.section) {
-        case .popular:
-            header.prepareForMainHeader(movie: movies[.popular]?.first ?? MockData.Result)
-        default:
-            header.prepareForTitle(gender: MovieGender(rawValue: indexPath.section) ?? .popular)
-        }
-        
-        return header
-    }
-    
-}
-
-

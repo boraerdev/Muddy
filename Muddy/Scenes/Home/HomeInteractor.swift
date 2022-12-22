@@ -44,7 +44,6 @@ extension HomeInteractor: HomeBusinessLogic {
         
         let response = Home.HomeMovies.Response(popularMovies: popularMovies, upcomingMovies: upcomingMovies, topRatedMovies: topRatedMovies, nowPlayingMovies: nowPlayingMovies)
         presenter?.presentMovies(response: response)
-        
     }
     
 }

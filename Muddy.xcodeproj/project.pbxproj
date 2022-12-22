@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A735B7D29547C8A009FDAED /* SliderMenuCellOnHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A735B7C29547C8A009FDAED /* SliderMenuCellOnHome.swift */; };
 		0A87CAF029532DD200B98BE0 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A87CAEF29532DD200B98BE0 /* UIView+Extensions.swift */; };
 		0A87CAF22953492F00B98BE0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */; };
 		0A87CAF529534AA100B98BE0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0A87CAF429534AA100B98BE0 /* Kingfisher */; };
@@ -49,6 +50,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A735B7C29547C8A009FDAED /* SliderMenuCellOnHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderMenuCellOnHome.swift; sourceTree = "<group>"; };
 		0A87CAEF29532DD200B98BE0 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		0A87CAF629535AC900B98BE0 /* MainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButton.swift; sourceTree = "<group>"; };
@@ -115,7 +117,9 @@
 		0AC66D6F2953884500905542 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */,
 				0AC66D702953884F00905542 /* GenderList.swift */,
+				0A735B7C29547C8A009FDAED /* SliderMenuCellOnHome.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -223,7 +227,6 @@
 		0AF1A57D29522BF100895A65 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				0A87CAF12953492F00B98BE0 /* HomeHeaderView.swift */,
 				0A87CAF629535AC900B98BE0 /* MainButton.swift */,
 			);
 			path = Components;
@@ -349,6 +352,7 @@
 				0AF1A58B2952455B00895A65 /* Helpers.swift in Sources */,
 				0AF1A5392952021900895A65 /* AppDelegate.swift in Sources */,
 				0AF1A56129522AC400895A65 /* HomeViewController.swift in Sources */,
+				0A735B7D29547C8A009FDAED /* SliderMenuCellOnHome.swift in Sources */,
 				0AF1A57A29522B9C00895A65 /* ProfileModels.swift in Sources */,
 				0AF1A57829522B9C00895A65 /* ProfileWorker.swift in Sources */,
 				0AF1A55D29522AC400895A65 /* HomePresenter.swift in Sources */,
