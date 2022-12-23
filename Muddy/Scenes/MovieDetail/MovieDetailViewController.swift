@@ -81,20 +81,18 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         fetchMovieImage()
     }
     
-    
     override func viewDidDisappear(_ animated: Bool) {
         movieBackgropImage.subviews.forEach { v in
             v.removeFromSuperview()
         }
     }
     
-    // MARK: FetchMovieDetails
+    // MARK: Main Funcs
     func fetchMovieDetails() {
         let id = router?.dataStore?.selectedMovie.id
         let request = MovieDetail.FetchMovieDetail.Request(movieId: id ?? 0)
         Task { await interactor?.fetchMovieDetail(request: request) }
     }
-    
     
     func displayMovieDetail(viewModel: MovieDetail.FetchMovieDetail.ViewModel) {
         movie = viewModel.movie
@@ -110,6 +108,7 @@ extension MovieDetailViewController {
 
         mainContainer?.stack(
             movieHeader().withWidth(view.frame.width),
+            actionButttons(),
             movieDetails(),
             spacing: 10
         )
@@ -208,7 +207,10 @@ extension MovieDetailViewController {
         )
         
         let clockImg: UIImageView = {
-            let img = UIImageView(image: .init(systemName: "clock"), contentMode: .scaleAspectFit)
+            let img = UIImageView(
+                image: .init(systemName: "clock"),
+                contentMode: .scaleAspectFit
+            )
             img.tintColor = .white
             img.withSize(.init(width: 11, height: 11))
             return img
@@ -229,7 +231,6 @@ extension MovieDetailViewController {
             textAlignment: .left,
             numberOfLines: 2
         )
-        
         
         let tagLine = UILabel(
             text: movie?.tagline,
@@ -267,12 +268,60 @@ extension MovieDetailViewController {
         return container.withHeight(400)
     }
     
-    
+    private func actionButttons() -> UIView {
+        var container = UIView()
+
+        //Btns
+        let btnSize: CGFloat = 40
+        let trailerBtn = UIButton(
+            image: .init(systemName: "play")!,
+            tintColor: .white,
+            target: self,
+            action: #selector(didTapTrailer)
+        )
+        
+        let addListBtn = UIButton(
+            image: .init(systemName: "plus")!,
+            tintColor: .white,
+            target: self,
+            action: #selector(didTapTrailer)
+        )
+        
+        [trailerBtn, addListBtn].forEach { btn in
+            btn.imageView?.contentMode = .scaleAspectFit
+            btn.contentVerticalAlignment = .fill
+            btn.contentHorizontalAlignment = .fill
+        }
+        
+        container.stack(
+            container.hstack(
+                container.stack(
+                    trailerBtn.withSize(.init(width: btnSize, height: btnSize)),
+                    UILabel(text: "Trailer",font: .systemFont(ofSize: 13), textColor: .secondaryLabel),
+                    spacing: 5,
+                    alignment: .center
+                ),
+                container.stack(
+                    addListBtn.withSize(.init(width: btnSize, height: btnSize)),
+                    UILabel(text: "List",font: .systemFont(ofSize: 13), textColor: .secondaryLabel),
+                    spacing: 5,
+                    alignment: .center
+                ),
+                spacing: 30
+            ),
+            alignment: .center
+        ).withMargins(
+            .init(top: 20, left: 0, bottom: 20, right: 0))
+
+        
+        return container
+    }
     
     private func movieDetails() -> UIView {
         let container = UIView()
-            
         let infoContainer = UIView()
+        
+        
         
         //Overview
         let overview = UILabel(
@@ -293,13 +342,16 @@ extension MovieDetailViewController {
             numberOfLines: 1
         )
         
+        
         infoContainer.stack(
             overview,
             genresLabel
-        ).withMargins(.init(top: 20, left: 16, bottom: 0, right: 16))
+        ).withMargins(
+            .init(top: 0, left: 16, bottom: 0, right: 16))
         
         container.stack(
-            infoContainer
+            infoContainer,
+            spacing: 10
         )
         
         return container
@@ -343,4 +395,8 @@ extension MovieDetailViewController {
     @objc func didTapBack() {
         dismiss(animated: true)
     }
+    
+    @objc func didTapTrailer() {
+    }
+
 }

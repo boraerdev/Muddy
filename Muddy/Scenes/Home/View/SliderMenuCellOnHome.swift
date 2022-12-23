@@ -11,7 +11,7 @@ import LBTATools
 class SliderMenuCell: UICollectionViewCell {
     static let identifier = "SliderMenuCell"
     
-    private lazy var genderTitle = UILabel(font: .systemFont(ofSize: 15), textColor: .white, textAlignment: .center, numberOfLines: 1)
+    private lazy var genderTitle = UILabel(font: .systemFont(ofSize: 17), textColor: .white, textAlignment: .center, numberOfLines: 1)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
