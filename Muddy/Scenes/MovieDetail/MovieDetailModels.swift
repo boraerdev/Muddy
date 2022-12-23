@@ -23,4 +23,16 @@ enum MovieDetail {
         }
     }
     
+    enum FetchCredits {
+        struct Request {
+            var movieId: Int
+        }
+        struct Response {
+            var credits: Credits?
+        }
+        struct ViewModel {
+            var cast: [Cast]?
+        }
+    }
+    
 }

@@ -10,6 +10,7 @@ import UIKit
 
 protocol MovieDetailPresentationLogic {
     func presentMovieDetail(response: MovieDetail.FetchMovieDetail.Response)
+    func presentCredits(response: MovieDetail.FetchCredits.Response)
 }
 
 class MovieDetailPresenter: MovieDetailPresentationLogic {
@@ -20,6 +21,12 @@ class MovieDetailPresenter: MovieDetailPresentationLogic {
     func presentMovieDetail(response: MovieDetail.FetchMovieDetail.Response) {
         let viewModel = MovieDetail.FetchMovieDetail.ViewModel(movie: response.movie)
         viewController?.displayMovieDetail(viewModel: viewModel)
+    }
+    
+    func presentCredits(response: MovieDetail.FetchCredits.Response) {
+        let cast = response.credits?.cast?.filter({$0.knownForDepartment == .acting})
+        let viewModel = MovieDetail.FetchCredits.ViewModel(cast: cast)
+        viewController?.displayCast(viewModel: viewModel)
     }
 
 }

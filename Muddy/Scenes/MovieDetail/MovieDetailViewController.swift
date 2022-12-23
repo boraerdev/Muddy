@@ -10,9 +10,11 @@ import UIKit
 
 protocol MovieDetailDisplayLogic: AnyObject {
     func displayMovieDetail(viewModel: MovieDetail.FetchMovieDetail.ViewModel)
+    func displayCast(viewModel: MovieDetail.FetchCredits.ViewModel)
 }
 
 class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
+
     var interactor: MovieDetailBusinessLogic?
     var router: (NSObjectProtocol & MovieDetailRoutingLogic & MovieDetailDataPassing)?
     
@@ -26,6 +28,8 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         }
     }
     
+    private var cast: [Cast] = []
+    
     //UI
     private lazy var movieBackgropImage: UIImageView = {
         let view = UIImageView(image: nil, contentMode: .scaleAspectFill)
@@ -33,7 +37,7 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         return view
     }()
     
-    let posterImageView: UIImageView = {
+    private lazy var posterImageView: UIImageView = {
        let imageview = UIImageView()
         imageview.layer.cornerRadius = 8
         imageview.layer.cornerCurve = .continuous
@@ -42,6 +46,23 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         imageview.withBorder(width: 1, color: .white)
         return imageview
     }()
+    
+    private lazy var castCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        layout.itemSize = .init(width: 100, height: 150)
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
+        cv.dataSource = self
+        cv.delegate = self
+        cv.backgroundColor = .clear
+        return cv
+    }()
+    
+    private var headerContainer: UIView?
+    
+    private var mainContainer: UIView?
     
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -53,9 +74,6 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         super.init(coder: aDecoder)
         setup()
     }
-    
-    private var headerContainer: UIView?
-    private var mainContainer: UIView?
     
     // MARK: Setup
     private func setup() {
@@ -78,13 +96,8 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
     
     override func viewWillAppear(_ animated: Bool) {
         fetchMovieDetails()
+        fetchMovieCast()
         fetchMovieImage()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        movieBackgropImage.subviews.forEach { v in
-            v.removeFromSuperview()
-        }
     }
     
     // MARK: Main Funcs
@@ -94,8 +107,22 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         Task { await interactor?.fetchMovieDetail(request: request) }
     }
     
+    func fetchMovieCast() {
+        let id = router?.dataStore?.selectedMovie.id
+        let request = MovieDetail.FetchCredits.Request(movieId: id ?? 0)
+        Task { await interactor?.fetchCredits(request:request)}
+    }
+    
+    // MARK: Display
     func displayMovieDetail(viewModel: MovieDetail.FetchMovieDetail.ViewModel) {
         movie = viewModel.movie
+    }
+    
+    func displayCast(viewModel: MovieDetail.FetchCredits.ViewModel) {
+        cast = viewModel.cast ?? []
+        DispatchQueue.main.async { [unowned self] in
+            castCollectionView.reloadData()
+        }
     }
 
 }
@@ -110,9 +137,11 @@ extension MovieDetailViewController {
             movieHeader().withWidth(view.frame.width),
             actionButttons(),
             movieDetails(),
+            credits(),
             spacing: 10
         )
         
+        //Preapre gradient for header
         DispatchQueue.main.async { [unowned self] in
             movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
             movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 1))
@@ -176,6 +205,7 @@ extension MovieDetailViewController {
         let scroll = UIScrollView()
         scroll.contentSize = .init(width: view.frame.width, height: 100)
         scroll.clipsToBounds = true
+        scroll.showsVerticalScrollIndicator = false
         container.addSubview(scroll)
         scroll.fillSuperview()
         return scroll
@@ -269,7 +299,7 @@ extension MovieDetailViewController {
     }
     
     private func actionButttons() -> UIView {
-        var container = UIView()
+        let container = UIView()
 
         //Btns
         let btnSize: CGFloat = 40
@@ -357,9 +387,52 @@ extension MovieDetailViewController {
         return container
     }
     
+    private func credits() -> UIView {
+        let container = UIView()
+        
+        let title = UILabel(
+            text: "Cast",
+            font: .systemFont(ofSize: 17, weight: .bold),
+            textColor: .white,
+            textAlignment: .left,
+            numberOfLines: 1)
+        
+        
+        container.stack(
+            container.hstack(title).withMargins(.init(top: 0, left: 16, bottom: 0, right: 0)),
+            castCollectionView.withHeight(150),
+            spacing: 10
+        )
+        
+        return container
+    }
+    
 }
 
-//Funcs
+extension MovieDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        switch collectionView {
+        case castCollectionView:
+            return cast.count
+        default:
+            return 0
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        switch collectionView {
+        case castCollectionView:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.identifier, for: indexPath) as? CastCollectionViewCell else {return .init()}
+            cell.configure(cast: cast[indexPath.row])
+            return cell
+        default:
+            return .init()
+        }
+    }
+    
+}
+
+// MARK: Funcs
 extension MovieDetailViewController {
     private func makeGenreString() -> String {
         var genresString = ""
@@ -390,7 +463,7 @@ extension MovieDetailViewController {
     }
 }
 
-//Objc
+// MARK: Objc
 extension MovieDetailViewController {
     @objc func didTapBack() {
         dismiss(animated: true)

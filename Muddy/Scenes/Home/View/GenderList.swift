@@ -58,7 +58,7 @@ class HomeGenderListCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        backgroundColor = .black
         layer.cornerRadius = 8
         layer.cornerCurve = .continuous
         clipsToBounds = true
