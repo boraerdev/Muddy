@@ -58,7 +58,7 @@ class HomeRouter: NSObject, HomeRoutingLogic, HomeDataPassing {
     // MARK: Navigation
     func navigateToMovieDetail(source: HomeViewController, destination: MovieDetailViewController)
     {
-        destination.modalPresentationStyle = .fullScreen
+        destination.modalPresentationStyle = .overCurrentContext
         source.show(destination, sender: nil)
     }
     

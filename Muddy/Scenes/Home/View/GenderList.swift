@@ -71,7 +71,10 @@ class HomeGenderListCell: UICollectionViewCell {
     
     func configure(movie: Result) {
         guard let url = URL(string: APIEndpoint.Image.lowPosterImage(path: movie.posterPath).toString) else {return}
-        movieImage.kf.setImage(with: url)
+        movieImage.kf.setImage(
+            with: url,
+            options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]
+        )
     }
     
     override func prepareForReuse() {

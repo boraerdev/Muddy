@@ -10,12 +10,17 @@ import UIKit
 
 enum MovieDetail {
     // MARK: Use cases
-    enum Something {
+    
+    enum FetchMovieDetail {
         struct Request {
+            var movieId: Int
         }
         struct Response {
+            var movie: DetailedMovie?
         }
         struct ViewModel {
+            var movie: DetailedMovie?
         }
     }
+    
 }

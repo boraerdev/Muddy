@@ -9,25 +9,29 @@
 import UIKit
 
 protocol MovieDetailBusinessLogic {
-    func doSomething(request: MovieDetail.Something.Request)
+    func fetchMovieDetail(request: MovieDetail.FetchMovieDetail.Request) async
 }
 
 protocol MovieDetailDataStore {
     var selectedMovie: Result { get set }
+    var movie: DetailedMovie? {get set}
 }
 
 class MovieDetailInteractor: MovieDetailBusinessLogic, MovieDetailDataStore {
+    
     var presenter: MovieDetailPresentationLogic?
     var worker: MovieDetailWorker?
     var selectedMovie: Result = MockData.Result
+    var movie: DetailedMovie? = nil
     
     // MARK: Do something
-    func doSomething(request: MovieDetail.Something.Request) {
-        worker = MovieDetailWorker()
-        worker?.doSomeWork()
+    func fetchMovieDetail(request: MovieDetail.FetchMovieDetail.Request) async {
+        let worker = HomeWorker()
+        let url: String = APIEndpoint.Movie.details(id: request.movieId).toString
+        movie = try? await worker.downloadGenericAboutMovie(urlString: url)
         
-        let response = MovieDetail.Something.Response()
-        presenter?.presentSomething(response: response)
+        let response = MovieDetail.FetchMovieDetail.Response(movie: movie)
+        presenter?.presentMovieDetail(response: response)
     }
     
 }

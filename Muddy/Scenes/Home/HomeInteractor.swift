@@ -34,15 +34,20 @@ class HomeInteractor: HomeBusinessLogic, HomeDataStore {
     
     func fetchHomeMovies(request: Home.HomeMovies.Request) async {
         let worker = HomeWorker()
-        popularMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.popularMovies.toString)
+        popularMovies = try? await worker.downloadGenericAboutMovie(urlString: APIEndpoint.Movie.popularMovies.toString)
         
-        topRatedMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.topRatedMovies.toString)
+        topRatedMovies = try? await worker.downloadGenericAboutMovie(urlString: APIEndpoint.Movie.topRatedMovies.toString)
         
-        upcomingMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.upcomingMovies.toString)
+        upcomingMovies = try? await worker.downloadGenericAboutMovie(urlString: APIEndpoint.Movie.upcomingMovies.toString)
         
-        nowPlayingMovies = try? await worker.downloadMovieList(urlString: APIEndpoint.Movie.nowPlayingMovies.toString)
+        nowPlayingMovies = try? await worker.downloadGenericAboutMovie(urlString: APIEndpoint.Movie.nowPlayingMovies.toString)
         
-        let response = Home.HomeMovies.Response(popularMovies: popularMovies, upcomingMovies: upcomingMovies, topRatedMovies: topRatedMovies, nowPlayingMovies: nowPlayingMovies)
+        let response = Home.HomeMovies.Response(
+            popularMovies: popularMovies,
+            upcomingMovies: upcomingMovies,
+            topRatedMovies: topRatedMovies,
+            nowPlayingMovies: nowPlayingMovies
+        )
         presenter?.presentMovies(response: response)
     }
     
