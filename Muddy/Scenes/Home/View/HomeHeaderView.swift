@@ -15,17 +15,24 @@ class HomeHeaderView: UIViewController {
     //DEF
     var movie: Result
     
+    var goDetail: (()->())?
+    
     //UI
     private lazy var imageView = UIImageView(image: .init(systemName: "house"), contentMode: .scaleAspectFill)
     
-    private lazy var showBtn: MainButton = {
-        let btn = MainButton(title: "Show",
-                             imgName: "playpause.fill",
-                             tintColor: .white,
-                             backgroundColor: .clear)
-        btn.withBorder(width: 1, color: .white)
-        return btn
-    }()
+//    private lazy var showBtn: MainButton = {
+//        let btn = MainButton(title: "Show",
+//                             imgName: "playpause.fill",
+//                             tintColor: .white,
+//                             backgroundColor: .clear)
+//        btn.withBorder(width: 1, color: .white)
+//        btn.addTarget(self, action: #selector(didTaGoDetail), for: .touchUpInside)
+//        return btn
+//    }()
+    
+    let showBtn = UIButton(title: "Show", titleColor: .white)
+    
+    
     
     //CORE
     public init(movie: Result) {
@@ -44,6 +51,13 @@ class HomeHeaderView: UIViewController {
         imageView.fillSuperview()
         fetchImage()
         layoutViews()
+        showBtn.addTarget(self, action: #selector(didTaGoDetail), for: .touchUpInside)
+    }
+    
+    @objc func didTaGoDetail() {
+        print("ok")
+        //(goDetail ?? fetchImage)()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -79,7 +93,7 @@ class HomeHeaderView: UIViewController {
             overview.withWidth(300),
             showBtn.withSize(.init(width: 150, height: 50)),
             relaseDate,
-            spacing: 8,
+            spacing: 10,
             alignment: .leading
         )
         

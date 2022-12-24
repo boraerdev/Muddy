@@ -120,7 +120,7 @@ extension HomeViewController: HomeDisplayLogic {
         var list: [MovieGender: [Result]] = [:]
         list[.popular] = viewModel.popularMovies?.results
         list[.nowPlaying] = viewModel.nowPlayingMovies?.results
-        list[.topRated] = viewModel.topRatedMovies?.results
+        list[.trendsToday] = viewModel.topRatedMovies?.results
         list[.upcoming] = viewModel.upcomingMovies?.results
         movies = list
     }
@@ -210,8 +210,8 @@ extension HomeViewController: UICollectionViewDataSource {
                     return movies[.nowPlaying]?.count ?? 0
                 case .upcoming:
                     return movies[.upcoming]?.count ?? 0
-                case .topRated:
-                    return movies[.topRated]?.count ?? 0
+                case .trendsToday:
+                    return movies[.trendsToday]?.count ?? 0
                     
                 default:
                     return movies[.popular]?.count ?? 0
@@ -238,8 +238,8 @@ extension HomeViewController: UICollectionViewDataSource {
                 cell.configure(movie: movies[.nowPlaying]?[indexPath.item] ?? MockData.Result)
             case .upcoming:
                 cell.configure(movie: movies[.upcoming]?[indexPath.item] ?? MockData.Result)
-            case .topRated:
-                cell.configure(movie: movies[.topRated]?[indexPath.item] ?? MockData.Result)
+            case .trendsToday:
+                cell.configure(movie: movies[.trendsToday]?[indexPath.item] ?? MockData.Result)
             default:
                 cell.configure(movie: movies[.popular]?[indexPath.row] ?? MockData.Result)
             }
@@ -312,6 +312,12 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 //MARK: Helper Funcs
 extension HomeViewController {
+    
+    public func prepareGoDetailForHeaderView(movie: Result) {
+        interactor?.setSelectedMovie(movie: movie)
+        router?.routeToDetail(target: MovieDetailViewController())
+    }
+    
     static func GenerateSection(model: MovieGender) -> NSCollectionLayoutSection {
         //Item
         let item = NSCollectionLayoutItem(
@@ -367,8 +373,8 @@ extension HomeViewController {
         case .upcoming:
             return HomeViewController.GenerateSection(model: .upcoming)
 
-        case .topRated:
-            return HomeViewController.GenerateSection(model: .topRated)
+        case .trendsToday:
+            return HomeViewController.GenerateSection(model: .trendsToday)
 
         case .nowPlaying:
             return HomeViewController.GenerateSection(model: .nowPlaying)

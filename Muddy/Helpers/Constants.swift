@@ -18,7 +18,7 @@ enum MovieGender: Int, CaseIterable {
     case popular
     case nowPlaying
     case upcoming
-    case topRated
+    case trendsToday
 }
 
 extension MovieGender {
@@ -28,8 +28,8 @@ extension MovieGender {
             return "Popular"
         case .upcoming:
             return "Upcoming"
-        case .topRated:
-            return "Top Rated"
+        case .trendsToday:
+            return "Today's Trends"
         case .nowPlaying:
             return "Now Playing"
         }

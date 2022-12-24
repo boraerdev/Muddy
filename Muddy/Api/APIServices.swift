@@ -38,7 +38,7 @@ extension APIEndpoint.Movie {
         case .nowPlayingMovies:
             return BASE_URL + "/movie/now_playing" + "?api_key=" + KEY
         case .topRatedMovies:
-            return BASE_URL + "/movie/top_rated" + "?api_key=" + KEY
+            return BASE_URL + "/trending/movie/day" + "?api_key=" + KEY
         case .details(let id):
             return BASE_URL + "/movie/\(id)" + "?api_key=" + KEY
         case .credits(let id):

@@ -43,7 +43,7 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         imageview.layer.cornerCurve = .continuous
         imageview.contentMode = .scaleAspectFill
         imageview.clipsToBounds = true
-        imageview.withBorder(width: 1, color: .white)
+        imageview.withBorder(width: 5, color: .systemGray5.withAlphaComponent(0.5))
         return imageview
     }()
     
@@ -56,6 +56,8 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         cv.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
         cv.dataSource = self
         cv.delegate = self
+        cv.isPagingEnabled = true
+        cv.showsHorizontalScrollIndicator = false
         cv.backgroundColor = .clear
         return cv
     }()
@@ -171,10 +173,21 @@ extension MovieDetailViewController {
             target: self,
             action: #selector(didTapBack)
         )
+        
+        let linkBtn = UIButton(
+            image: .init(systemName: "link")!,
+            tintColor: .white,
+            target: self,
+            action: #selector(didTapBack)
+        )
+        linkBtn.imageView?.contentMode = .scaleAspectFill
+        
+        
         backBtn.imageView?.contentMode = .scaleAspectFit
         container.hstack(
             backBtn.withWidth(25),
-            UIView()
+            UIView(),
+            linkBtn.withSize(.init(width: 25, height: 25))
         ).withMargins(.allSides(16))
         
         let titleLabel = UILabel(
@@ -317,7 +330,14 @@ extension MovieDetailViewController {
             action: #selector(didTapTrailer)
         )
         
-        [trailerBtn, addListBtn].forEach { btn in
+        let shareBtn = UIButton(
+            image: .init(systemName: "square.and.arrow.up")!,
+            tintColor: .white,
+            target: self,
+            action: #selector(didTapTrailer)
+        )
+        
+        [trailerBtn, addListBtn, shareBtn].forEach { btn in
             btn.imageView?.contentMode = .scaleAspectFit
             btn.contentVerticalAlignment = .fill
             btn.contentHorizontalAlignment = .fill
@@ -333,7 +353,13 @@ extension MovieDetailViewController {
                 ),
                 container.stack(
                     addListBtn.withSize(.init(width: btnSize, height: btnSize)),
-                    UILabel(text: "List",font: .systemFont(ofSize: 13), textColor: .secondaryLabel),
+                    UILabel(text: "Watchlist",font: .systemFont(ofSize: 13), textColor: .secondaryLabel),
+                    spacing: 5,
+                    alignment: .center
+                ),
+                container.stack(
+                    shareBtn.withSize(.init(width: btnSize, height: btnSize)),
+                    UILabel(text: "Share",font: .systemFont(ofSize: 13), textColor: .secondaryLabel),
                     spacing: 5,
                     alignment: .center
                 ),

@@ -31,6 +31,10 @@ class MainHomeHeader: UICollectionReusableView {
         DispatchQueue.main.async { [unowned self] in
             genderTitle.text = "Popular"
             let vc = HomeHeaderView(movie: movie)
+            let homeView = HomeViewController()
+            vc.goDetail = {
+                homeView.prepareGoDetailForHeaderView(movie: movie)
+            }
             stack(
                 vc.view,
                 container.withHeight(50)

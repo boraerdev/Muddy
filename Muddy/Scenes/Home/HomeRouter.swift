@@ -54,7 +54,7 @@ class HomeRouter: NSObject, HomeRoutingLogic, HomeDataPassing {
         passDataToMovieDetail(source: dataStore!, destination: &destinationDS)
         navigateToMovieDetail(source: viewController!, destination: target)
     }
-
+    
     // MARK: Navigation
     func navigateToMovieDetail(source: HomeViewController, destination: MovieDetailViewController)
     {
@@ -67,4 +67,5 @@ class HomeRouter: NSObject, HomeRoutingLogic, HomeDataPassing {
     {
         destination.selectedMovie = source.selectedMovie ?? MockData.Result
     }
+    
 }

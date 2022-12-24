@@ -11,8 +11,9 @@ import LBTATools
 class MainTabbarController: UITabBarController  {
     
     private lazy var discoverBtn: UIButton = {
-        let btn = UIButton(image: .init(systemName: "bolt.horizontal")!, action: #selector(didTapMain))
+        let btn = UIButton(image: .init(named: "logo")!, action: #selector(didTapMain))
         btn.backgroundColor = .red
+        
         btn.tintColor = .white
         btn.layer.cornerRadius = 8
         btn.layer.cornerCurve = .continuous
@@ -41,7 +42,7 @@ class MainTabbarController: UITabBarController  {
         
         //Main Button
         view.addSubview(discoverBtn)
-        discoverBtn.withSize(.init(width: 60, height: 45))
+        discoverBtn.withSize(.init(width: 60, height: 60))
         discoverBtn.centerYAnchor.constraint(equalTo: tabBar.centerYAnchor, constant: -30).isActive = true
         discoverBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }

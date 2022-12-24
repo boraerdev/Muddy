@@ -32,6 +32,7 @@ final class CastCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
+        castImage.tintColor = .white
         castImage.layer.cornerRadius = 8
         castImage.layer.cornerCurve = .continuous
         
@@ -52,7 +53,10 @@ final class CastCollectionViewCell: UICollectionViewCell {
         orgName.text = cast.name
         characterName.text = cast.character
         guard let url = URL(string: APIEndpoint.Image.mediumCastImage(path: cast.profilePath ?? "").toString) else {return}
-        castImage.kf.setImage(with: url)
+        castImage.kf.setImage(
+            with: url,
+            options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]
+        )
     }
     
     override func prepareForReuse() {
