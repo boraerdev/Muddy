@@ -11,6 +11,7 @@ import UIKit
 protocol MovieDetailPresentationLogic {
     func presentMovieDetail(response: MovieDetail.FetchMovieDetail.Response)
     func presentCredits(response: MovieDetail.FetchCredits.Response)
+    func presentRecommendations(response: MovieDetail.FetchRecommendations.Response)
 }
 
 class MovieDetailPresenter: MovieDetailPresentationLogic {
@@ -28,5 +29,12 @@ class MovieDetailPresenter: MovieDetailPresentationLogic {
         let viewModel = MovieDetail.FetchCredits.ViewModel(cast: cast)
         viewController?.displayCast(viewModel: viewModel)
     }
+    
+    func presentRecommendations(response: MovieDetail.FetchRecommendations.Response) {
+        let movies = response.recommendations?.results ?? []
+        let viewModel = MovieDetail.FetchRecommendations.ViewModel(movies: movies)
+        viewController?.displayRecommendations(viewModel: viewModel)
+    }
+
 
 }

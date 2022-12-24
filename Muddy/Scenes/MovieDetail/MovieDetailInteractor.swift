@@ -11,18 +11,20 @@ import UIKit
 protocol MovieDetailBusinessLogic {
     func fetchMovieDetail(request: MovieDetail.FetchMovieDetail.Request) async
     func fetchCredits(request: MovieDetail.FetchCredits.Request) async
+    func fetchRecommendations(request: MovieDetail.FetchRecommendations.Request) async
+    func setSelectedMovie(movie: Result)
 }
 
 protocol MovieDetailDataStore {
     var selectedMovie: Result { get set }
     var movie: DetailedMovie? {get set}
     var credits: Credits? {get set}
+    var recommendations: Recommendations? {get set}
 }
 
 class MovieDetailInteractor: MovieDetailBusinessLogic, MovieDetailDataStore {
-   
     
-    
+    var recommendations: Recommendations?
     var presenter: MovieDetailPresentationLogic?
     var worker: MovieDetailWorker?
     var selectedMovie: Result = MockData.Result
@@ -46,6 +48,19 @@ class MovieDetailInteractor: MovieDetailBusinessLogic, MovieDetailDataStore {
         
         let response = MovieDetail.FetchCredits.Response(credits: credits)
         presenter?.presentCredits(response: response)
+    }
+    
+    func fetchRecommendations(request: MovieDetail.FetchRecommendations.Request) async {
+        let worker = HomeWorker()
+        let url: String = APIEndpoint.Movie.getRecommendations(id: request.movieId).toString
+        recommendations = try? await worker.downloadGenericAboutMovie(urlString: url)
+        
+        let response = MovieDetail.FetchRecommendations.Response(recommendations: recommendations)
+        presenter?.presentRecommendations(response: response)
+    }
+    
+    func setSelectedMovie(movie: Result) {
+        selectedMovie = movie
     }
     
 }

@@ -35,4 +35,16 @@ enum MovieDetail {
         }
     }
     
+    enum FetchRecommendations {
+        struct Request {
+            var movieId: Int
+        }
+        struct Response {
+            var recommendations: Recommendations?
+        }
+        struct ViewModel {
+            var movies: [Result]
+        }
+    }
+    
 }

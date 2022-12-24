@@ -11,6 +11,7 @@ import UIKit
 protocol MovieDetailDisplayLogic: AnyObject {
     func displayMovieDetail(viewModel: MovieDetail.FetchMovieDetail.ViewModel)
     func displayCast(viewModel: MovieDetail.FetchCredits.ViewModel)
+    func displayRecommendations(viewModel: MovieDetail.FetchRecommendations.ViewModel)
 }
 
 class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
@@ -29,6 +30,7 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
     }
     
     private var cast: [Cast] = []
+    private var recommendedMovies: [Result] = []
     
     //UI
     private lazy var movieBackgropImage: UIImageView = {
@@ -54,6 +56,21 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         layout.itemSize = .init(width: 100, height: 150)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
+        cv.dataSource = self
+        cv.delegate = self
+        cv.isPagingEnabled = true
+        cv.showsHorizontalScrollIndicator = false
+        cv.backgroundColor = .clear
+        return cv
+    }()
+    
+    private lazy var recommendaionsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        layout.itemSize = .init(width: 135, height: 200)
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.register(RecommendationsCollectionViewCell.self, forCellWithReuseIdentifier: RecommendationsCollectionViewCell.identifier)
         cv.dataSource = self
         cv.delegate = self
         cv.isPagingEnabled = true
@@ -99,10 +116,11 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
     override func viewWillAppear(_ animated: Bool) {
         fetchMovieDetails()
         fetchMovieCast()
+        fetchRecommendations()
         fetchMovieImage()
     }
     
-    // MARK: Main Funcs
+    // MARK: Fetch
     func fetchMovieDetails() {
         let id = router?.dataStore?.selectedMovie.id
         let request = MovieDetail.FetchMovieDetail.Request(movieId: id ?? 0)
@@ -115,6 +133,12 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         Task { await interactor?.fetchCredits(request:request)}
     }
     
+    func fetchRecommendations() {
+        let id = router?.dataStore?.selectedMovie.id ?? 0
+        let request = MovieDetail.FetchRecommendations.Request(movieId: id)
+        Task {await interactor?.fetchRecommendations(request: request)}
+    }
+    
     // MARK: Display
     func displayMovieDetail(viewModel: MovieDetail.FetchMovieDetail.ViewModel) {
         movie = viewModel.movie
@@ -124,6 +148,14 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
         cast = viewModel.cast ?? []
         DispatchQueue.main.async { [unowned self] in
             castCollectionView.reloadData()
+        }
+    }
+    
+    func displayRecommendations(viewModel: MovieDetail.FetchRecommendations.ViewModel) {
+        recommendedMovies = viewModel.movies
+        DispatchQueue.main.async { [unowned self] in
+            recommendaionsCollectionView.reloadData()
+            recommendaionsCollectionView.isHidden = recommendedMovies.isEmpty
         }
     }
 
@@ -140,6 +172,7 @@ extension MovieDetailViewController {
             actionButttons(),
             movieDetails(),
             credits(),
+            recommendations(),
             spacing: 10
         )
         
@@ -433,6 +466,25 @@ extension MovieDetailViewController {
         return container
     }
     
+    private func recommendations() -> UIView {
+        let container = UIView()
+        
+        let title = UILabel(
+            text: "Recommendations",
+            font: .systemFont(ofSize: 17, weight: .bold),
+            textColor: .white,
+            textAlignment: .left,
+            numberOfLines: 1)
+
+        container.stack(
+            container.hstack(title).withMargins(.init(top: 0, left: 16, bottom: 0, right: 0)),
+            recommendaionsCollectionView.withHeight(200),
+            spacing: 10
+        )
+        
+        return container
+    }
+    
 }
 
 extension MovieDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -440,6 +492,8 @@ extension MovieDetailViewController: UICollectionViewDataSource, UICollectionVie
         switch collectionView {
         case castCollectionView:
             return cast.count
+        case recommendaionsCollectionView:
+            return recommendedMovies.count
         default:
             return 0
         }
@@ -451,8 +505,22 @@ extension MovieDetailViewController: UICollectionViewDataSource, UICollectionVie
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.identifier, for: indexPath) as? CastCollectionViewCell else {return .init()}
             cell.configure(cast: cast[indexPath.row])
             return cell
+        case recommendaionsCollectionView:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendationsCollectionViewCell.identifier, for: indexPath) as? RecommendationsCollectionViewCell else {return .init()}
+            cell.configure(movie: recommendedMovies[indexPath.row])
+            return cell
         default:
             return .init()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionView {
+        case recommendaionsCollectionView:
+            interactor?.setSelectedMovie(movie: recommendedMovies[indexPath.row])
+            router?.routeToDetail(target: MovieDetailViewController())
+        default:
+            break
         }
     }
     

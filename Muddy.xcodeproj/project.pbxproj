@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A5C77242957A3D2005CB9F4 /* Recommendations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5C77232957A3D2005CB9F4 /* Recommendations.swift */; };
+		0A5C77262957A684005CB9F4 /* RecommendationsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5C77252957A684005CB9F4 /* RecommendationsCollectionViewCell.swift */; };
 		0A735B7D29547C8A009FDAED /* SliderMenuCellOnHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A735B7C29547C8A009FDAED /* SliderMenuCellOnHome.swift */; };
 		0A801616295795DB008CA293 /* HomeHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A801615295795DB008CA293 /* HomeHeaderReusableView.swift */; };
 		0A8016182957963F008CA293 /* GenreHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8016172957963F008CA293 /* GenreHeaderCollectionReusableView.swift */; };
@@ -62,6 +64,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A5C77232957A3D2005CB9F4 /* Recommendations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recommendations.swift; sourceTree = "<group>"; };
+		0A5C77252957A684005CB9F4 /* RecommendationsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationsCollectionViewCell.swift; sourceTree = "<group>"; };
 		0A735B7C29547C8A009FDAED /* SliderMenuCellOnHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderMenuCellOnHome.swift; sourceTree = "<group>"; };
 		0A801615295795DB008CA293 /* HomeHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderReusableView.swift; sourceTree = "<group>"; };
 		0A8016172957963F008CA293 /* GenreHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
@@ -177,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				0AED72BD29565FBE004E2286 /* CastCollectionViewCell.swift */,
+				0A5C77252957A684005CB9F4 /* RecommendationsCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -301,6 +306,7 @@
 				0AC66D732953CFBB00905542 /* Result.swift */,
 				0AAF0E592954C60800F4B74E /* DetailedMovie.swift */,
 				0AED72BA295654D9004E2286 /* Credits.swift */,
+				0A5C77232957A3D2005CB9F4 /* Recommendations.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -432,6 +438,7 @@
 				0AAF0E5729549F5500F4B74E /* MovieDetailInteractor.swift in Sources */,
 				0AF1A54F2952073A00895A65 /* MainTabbarController.swift in Sources */,
 				0A8016182957963F008CA293 /* GenreHeaderCollectionReusableView.swift in Sources */,
+				0A5C77242957A3D2005CB9F4 /* Recommendations.swift in Sources */,
 				0AC66D712953884F00905542 /* GenreListCell.swift in Sources */,
 				0AF1A59329525C4500895A65 /* TopRatedMovies.swift in Sources */,
 				0A87CAF22953492F00B98BE0 /* HeaderView.swift in Sources */,
@@ -439,6 +446,7 @@
 				0A87CAF029532DD200B98BE0 /* UIView+Extensions.swift in Sources */,
 				0AAF0E5429549F5500F4B74E /* MovieDetailRouter.swift in Sources */,
 				0AF1A53B2952021900895A65 /* SceneDelegate.swift in Sources */,
+				0A5C77262957A684005CB9F4 /* RecommendationsCollectionViewCell.swift in Sources */,
 				0AED72BB295654D9004E2286 /* Credits.swift in Sources */,
 				0AF1A58F29525AB700895A65 /* APIServices.swift in Sources */,
 			);
