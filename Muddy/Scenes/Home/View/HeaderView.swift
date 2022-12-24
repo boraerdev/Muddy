@@ -52,16 +52,16 @@ class HomeHeaderView: UIViewController {
         fetchImage()
         layoutViews()
         showBtn.addTarget(self, action: #selector(didTaGoDetail), for: .touchUpInside)
+        insertGradient()
+
     }
     
     @objc func didTaGoDetail() {
-        print("a")
         delegate?.didTapGoHeaderDetail(movie: movie)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        insertGradient()
     }
     
     //UI Funcs
@@ -102,15 +102,19 @@ class HomeHeaderView: UIViewController {
     }
     
     private func insertGradient() {
-        imageView.insertGradient(
-            colors: [.black, .clear],
-            startPoint: .init(x: 0.5, y: 1),
-            endPoint: .init(x: 0.5, y: 0))
+        DispatchQueue.main.async { [unowned self] in
+            imageView.insertGradient(
+                colors: [.black, .clear],
+                startPoint: .init(x: 0.5, y: 1),
+                endPoint: .init(x: 0.5, y: 0))
+        }
     }
     
     private func fetchImage() {
         guard let url = URL(string: APIEndpoint.Image.orgImage(path: movie.backdropPath).toString) else {return}
-        imageView.kf.setImage(with: url)
+        imageView.kf.setImage(
+            with: url
+        )
     }
     
 }
