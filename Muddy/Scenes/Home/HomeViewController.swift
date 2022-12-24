@@ -43,16 +43,15 @@ final class HomeViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection in
             return HomeViewController.createSectionLayout(section: sectionIndex)
         }
-        
         let cv = UICollectionView(
             frame: .zero,
             collectionViewLayout: layout
         )
-        
         cv.delegate = self
         cv.dataSource = self
         cv.register(HomeGenderListCell.self, forCellWithReuseIdentifier: HomeGenderListCell.identifier)
-        cv.register(MainHomeHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHomeHeader.identifier)
+        cv.register(MainHomeHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHomeHeaderReusableView.identifier)
+        cv.register(GenreHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: GenreHeaderCollectionReusableView.identifier)
         cv.clipsToBounds = false
         cv.layer.masksToBounds = false
         cv.showsVerticalScrollIndicator = false
@@ -258,15 +257,18 @@ extension HomeViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHomeHeader.identifier, for: indexPath) as? MainHomeHeader else {return .init()}
-            switch MovieGender(rawValue: indexPath.section) {
-            case .popular:
-                header.prepareForMainHeader(movie: movies[.popular]?.first ?? MockData.Result)
-            default:
-                header.prepareForTitle(gender: MovieGender(rawValue: indexPath.section) ?? .popular)
-            }
             
+        switch indexPath.section {
+        case 0:
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHomeHeaderReusableView.identifier, for: indexPath) as? MainHomeHeaderReusableView else {return .init()}
+                header.prepareForMainHeader(movie: movies[.popular]?.first ?? MockData.Result)
+            header.delegate = self
             return header
+        default:
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: GenreHeaderCollectionReusableView.identifier, for: indexPath) as? GenreHeaderCollectionReusableView else {return .init()}
+            header.configure(with: MovieGender(rawValue: indexPath.section) ?? .popular)
+            return header
+        }
         
     }
     
@@ -385,4 +387,12 @@ extension HomeViewController {
         }
     }
 
+}
+
+extension HomeViewController: MainHomeHeaderReusableViewDelegate {
+    func didTapGoHeaderMovie(movie: Result) {
+        interactor?.setSelectedMovie(movie: movie)
+        router?.routeToDetail(target: MovieDetailViewController())
+    }
+    
 }

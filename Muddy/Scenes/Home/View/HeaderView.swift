@@ -10,29 +10,29 @@ import LBTATools
 import Kingfisher
 
 @MainActor
+
+protocol HomeHeaderViewDelegate: AnyObject {
+    func didTapGoHeaderDetail(movie: Result)
+}
+
 class HomeHeaderView: UIViewController {
     
     //DEF
     var movie: Result
-    
-    var goDetail: (()->())?
+    weak var delegate: HomeHeaderViewDelegate?
     
     //UI
     private lazy var imageView = UIImageView(image: .init(systemName: "house"), contentMode: .scaleAspectFill)
     
-//    private lazy var showBtn: MainButton = {
-//        let btn = MainButton(title: "Show",
-//                             imgName: "playpause.fill",
-//                             tintColor: .white,
-//                             backgroundColor: .clear)
-//        btn.withBorder(width: 1, color: .white)
-//        btn.addTarget(self, action: #selector(didTaGoDetail), for: .touchUpInside)
-//        return btn
-//    }()
-    
-    let showBtn = UIButton(title: "Show", titleColor: .white)
-    
-    
+    private lazy var showBtn: MainButton = {
+        let btn = MainButton(title: "Show",
+                             imgName: "playpause.fill",
+                             tintColor: .white,
+                             backgroundColor: .clear)
+        btn.withBorder(width: 1, color: .white)
+        btn.addTarget(self, action: #selector(didTaGoDetail), for: .touchUpInside)
+        return btn
+    }()
     
     //CORE
     public init(movie: Result) {
@@ -55,9 +55,8 @@ class HomeHeaderView: UIViewController {
     }
     
     @objc func didTaGoDetail() {
-        print("ok")
-        //(goDetail ?? fetchImage)()
-        
+        print("a")
+        delegate?.didTapGoHeaderDetail(movie: movie)
     }
     
     override func viewDidLayoutSubviews() {
