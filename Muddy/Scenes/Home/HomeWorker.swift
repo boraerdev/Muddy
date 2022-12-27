@@ -9,6 +9,8 @@
 import UIKit
 
 class HomeWorker {
+    static let shared = HomeWorker()
+    
     func downloadGenericAboutMovie<T: Codable>(urlString: String) async throws -> T? {
         guard let url = URL(string: urlString) else {return nil}
         do {

@@ -14,6 +14,10 @@ let L_IMAGE_BASE = "https://image.tmdb.org/t/p/w154"
 let M_IMAGE_BASE_BACKDROP = "https://image.tmdb.org/t/p/w780"
 let M_IMAGE_BASE_CAST = "https://image.tmdb.org/t/p/w185"
 
+let yOffsetSpeed: CGFloat = 100
+let xOffsetSpeed: CGFloat = 30
+
+
 enum MovieGender: Int, CaseIterable {
     case popular
     case nowPlaying

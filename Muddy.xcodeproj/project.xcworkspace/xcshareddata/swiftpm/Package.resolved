@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "collectionviewslantedlayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yacir/CollectionViewSlantedLayout.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "0364421309bece26bff03da52c00222c55ed37bf"
+      }
+    },
+    {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher.git",

@@ -17,6 +17,8 @@ enum APIEndpoint {
         case details(id: Int)
         case credits(id: Int)
         case getRecommendations(id: Int)
+        case discoverMovie
+        case searchMovie(query: String)
     }
     
     enum Image {
@@ -46,6 +48,10 @@ extension APIEndpoint.Movie {
             return BASE_URL + "/movie/\(id)/credits" + "?api_key=" + KEY
         case .getRecommendations(let id):
             return BASE_URL + "/movie/\(id)/recommendations" + "?api_key=" + KEY
+        case .discoverMovie:
+            return BASE_URL + "/discover/movie" + "?api_key=" + KEY
+        case .searchMovie(let query):
+            return BASE_URL + "/search/movie" + "?api_key=" + KEY + "&query=" + query
         }
     }
 }

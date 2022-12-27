@@ -161,6 +161,7 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
 
 }
 
+// MARK: UI
 extension MovieDetailViewController {
     private func setupUI() {
         view.backgroundColor = .black

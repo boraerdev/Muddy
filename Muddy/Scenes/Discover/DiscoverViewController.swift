@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LBTATools
 
 protocol DiscoverDisplayLogic: AnyObject {
     func displaySomething(viewModel: Discover.Something.ViewModel)
@@ -16,10 +17,23 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     var interactor: DiscoverBusinessLogic?
     var router: (NSObjectProtocol & DiscoverRoutingLogic & DiscoverDataPassing)?
     
+    // MARK: UI Components
+    
+    private lazy var backgroundImage = UIImageView(image: .init(named: "collectionBG"), contentMode: .scaleAspectFill)
+    
+    private lazy var textView: UITextView = {
+        let tv = UITextView(backgroundColor: .clear)
+        tv.withBorder(width: 1, color: .white)
+        tv.layer.cornerRadius = 8
+        tv.font = .systemFont(ofSize: 15)
+        tv.layer.cornerCurve = .continuous
+        tv.backgroundColor = .white.withAlphaComponent(0.2)
+        return tv
+    }()
+    
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        view.backgroundColor = .red
         setup()
     }
     
@@ -41,21 +55,12 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         router.viewController = viewController
         router.dataStore = interactor
     }
-    
-    // MARK: Routing
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let scene = segue.identifier {
-            let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-            if let router = router, router.responds(to: selector) {
-                router.perform(selector, with: segue)
-            }
-        }
-    }
-    
+
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         doSomething()
+        setupUI()
     }
     
     // MARK: Do something
@@ -66,5 +71,62 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     
     func displaySomething(viewModel: Discover.Something.ViewModel) {
         //nameTextField.text = viewModel.name
+    }
+}
+
+//MARK : UI Funcs
+extension DiscoverViewController {
+    private func setupUI() {
+        view.addSubview(backgroundImage)
+        backgroundImage.anchor(
+            top: view.topAnchor,
+            leading: view.leadingAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            trailing: view.trailingAnchor)
+        prepareGradient()
+        
+        let container = prepareMainContainer()
+
+        container.stack(
+            textInput()
+        )
+        
+        
+    }
+    
+    private func prepareMainContainer() -> UIView {
+        let scroll = UIScrollView()
+        view.addSubview(scroll)
+        scroll.fillSuperviewSafeAreaLayoutGuide()
+        return scroll
+    }
+    
+    private func textInput() -> UIView {
+        let container = UIView()
+        
+        lazy var title = UILabel(
+            text: "Explain Your Mood",
+            font: .systemFont(ofSize: 22, weight: .bold),
+            textColor: .white,
+            textAlignment: .center,
+            numberOfLines: 1)
+        
+        container.stack(
+            title,
+            container.hstack(
+                textView.withSize(.init(width: view.frame.width - 36, height: 100))
+            ).withMargins(.init(top: 0, left: 16, bottom: 00, right: 16))
+        )
+
+        
+        return container
+    }
+    
+    private func prepareGradient() {
+        DispatchQueue.main.async { [unowned self] in
+            backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
+            backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.3))
+            
+        }
     }
 }
