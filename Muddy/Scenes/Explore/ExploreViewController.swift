@@ -43,6 +43,12 @@ class ExploreViewController: UIViewController, ExploreDisplayLogic {
         return lbl
     }()
     
+    private lazy var clearBtn: UIButton = {
+        let btn = UIButton(image: .init(systemName: "xmark")!, tintColor: .white, target: self, action: #selector(didTapClear))
+        btn.isHidden = true
+        return btn
+    }()
+    
     private lazy var searchField: IndentedTextField = {
         let field = IndentedTextField(
             placeholder: "Search Movie, Genre, Actor...",
@@ -97,7 +103,7 @@ class ExploreViewController: UIViewController, ExploreDisplayLogic {
     }
     
     private func fetchSearch() {
-        let text = searchField.text!.lowercased()
+        let text = searchField.text!
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
 
@@ -120,6 +126,7 @@ class ExploreViewController: UIViewController, ExploreDisplayLogic {
         }
         discoverMovies = viewModel.moviesList
         DispatchQueue.main.async { [unowned self] in
+            showNoResultLabel(false)
             collectionView.reloadData()
         }
     }
@@ -135,9 +142,17 @@ extension ExploreViewController {
             }
         }
     }
+    
+    private func showClearBtn(_ bool: Bool) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) { [unowned self] in
+                clearBtn.isHidden = !bool
+            }
+        }
+    }
 }
 
-//
+// MARK: UI Funcs
 extension ExploreViewController {
     private func setupUI() {
         let _ = header()
@@ -158,6 +173,7 @@ extension ExploreViewController {
         container.hstack(
             noResultLabel,
             searchField,
+            clearBtn,
              spacing: 10
         ).withMargins(.init(top: 5, left: 16, bottom: 5, right: 16))
         
@@ -200,7 +216,6 @@ extension ExploreViewController: CollectionViewDelegateSlantedLayout {
     }
 }
 
-
 extension ExploreViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let collectionView = collectionView
@@ -217,11 +232,21 @@ extension ExploreViewController: UIScrollViewDelegate {
 extension ExploreViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard textField.text != "" else {
-            showNoResultLabel(false)
+            showClearBtn(true)
             return false
         }
+        showClearBtn(true)
         fetchSearch()
-        showNoResultLabel(false)
         return true
+    }
+}
+
+//MARK: Objc
+extension ExploreViewController {
+    @objc func didTapClear() {
+        fetchDiscover()
+        searchField.text = nil
+        showClearBtn(false)
+        showNoResultLabel(false)
     }
 }

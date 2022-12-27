@@ -54,7 +54,9 @@ final class MovieCollectionViewCell: CollectionViewSlantedCell {
             options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]
         )
         title.text = movie.title
-        movieImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
+        DispatchQueue.main.async { [unowned self] in
+            movieImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
+        }
     }
     
     override func prepareForReuse() {

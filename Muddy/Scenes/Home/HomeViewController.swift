@@ -17,7 +17,7 @@ final class HomeViewController: UIViewController {
     var interactor: HomeBusinessLogic?
     var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
     
-    //UI
+    //MARK: UI Components
     private lazy var sliderMenuCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -30,14 +30,19 @@ final class HomeViewController: UIViewController {
         return vc
     }()
     
-    private lazy var searchField = IndentedTextField(
+    private lazy var searchField: IndentedTextField = {
+       let field = IndentedTextField(
         placeholder: "Search Movie, Genre, Actor...",
         padding: 10,
         cornerRadius: 20,
         keyboardType: .default,
         backgroundColor: .clear,
         isSecureTextEntry: false
-    )
+       )
+        field.addTarget(self, action: #selector(didTapSearch), for: .touchDown)
+        return field
+    }()
+    
     
     private lazy var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection in
@@ -104,7 +109,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLayoutSubviews()
     }
     
-    // MARK: Fetch Movies
+    // MARK: Fetch
     func fetchMovies() {
         let request = Home.HomeMovies.Request()
         Task { await interactor?.fetchHomeMovies(request: request) }
@@ -127,6 +132,7 @@ extension HomeViewController: HomeDisplayLogic {
 
 extension HomeViewController {
     @objc func didTapSearch() {
+        tabBarController?.selectedIndex = 1
     }
 }
 
