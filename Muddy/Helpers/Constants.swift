@@ -20,9 +20,10 @@ let xOffsetSpeed: CGFloat = 30
 
 enum MovieGender: Int, CaseIterable {
     case popular
+    case trendsToday
     case nowPlaying
     case upcoming
-    case trendsToday
+    
 }
 
 extension MovieGender {

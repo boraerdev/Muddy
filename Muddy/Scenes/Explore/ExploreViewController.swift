@@ -27,7 +27,6 @@ class ExploreViewController: UIViewController, ExploreDisplayLogic {
     //MARK: UI Components
     private lazy var collectionView: UICollectionView = {
         let slantedLayout = CollectionViewSlantedLayout()
-        slantedLayout.isLastCellExcluded = true
         slantedLayout.slantingSize = 60
         let cv = UICollectionView(frame: .zero, collectionViewLayout: slantedLayout)
         cv.delegate = self

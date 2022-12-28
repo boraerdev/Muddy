@@ -16,7 +16,11 @@ final class MovieCollectionViewCell: CollectionViewSlantedCell {
     
     private lazy var movieImage = UIImageView(image: nil, contentMode: .scaleAspectFill)
     
-    private lazy var title = UILabel(text: nil, font: .systemFont(ofSize: 17, weight: .bold), textColor: .white, textAlignment: .center, numberOfLines: 1)
+    private lazy var title: UILabel = {
+        let label =  UILabel(text: nil, font: .systemFont(ofSize: 17, weight: .bold), textColor: .white, textAlignment: .left, numberOfLines: 2)
+        label.transform = .init(rotationAngle: -Double.pi / 20)
+        return label
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,8 +28,8 @@ final class MovieCollectionViewCell: CollectionViewSlantedCell {
         addSubview(movieImage)
         movieImage.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: -pad, left: -pad, bottom: -pad, right: -pad), size: .init(width: frame.width * 1.2, height: frame.height * 1.2))
         stack(
-            title.withWidth(300),
-            alignment: .center
+            UIView(),
+            hstack(title.withWidth(200)).withMargins(.init(top: 0, left: 20, bottom: 50, right: 80))
         )
         
     }
