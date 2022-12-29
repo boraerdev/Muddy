@@ -12,6 +12,7 @@ enum Explore {
     // MARK: Use cases
     enum FetchDiscover {
         struct Request {
+            let params: String
         }
         struct Response {
             var discoverMoviws: DiscoverMovies?
@@ -30,6 +31,17 @@ enum Explore {
         }
         struct ViewModel {
             var moviesList: [Result]
+        }
+    }
+    
+    enum FetchGenres {
+        struct Request {
+        }
+        struct Response {
+            var genreModel: GenreModel?
+        }
+        struct ViewModel {
+            var genres: [Genre]
         }
     }
     

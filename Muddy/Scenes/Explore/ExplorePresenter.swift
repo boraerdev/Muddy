@@ -11,6 +11,7 @@ import UIKit
 protocol ExplorePresentationLogic {
     func presentDiscover(response: Explore.FetchDiscover.Response)
     func presentSearch(response: Explore.FetchSearch.Response)
+    func presentGenres(response: Explore.FetchGenres.Response)
 }
 
 class ExplorePresenter: ExplorePresentationLogic {
@@ -29,5 +30,12 @@ class ExplorePresenter: ExplorePresentationLogic {
         let viewModel = Explore.FetchSearch.ViewModel(moviesList: movies)
         viewController?.displaySearcg(viewModel: viewModel)
     }
+    
+    func presentGenres(response: Explore.FetchGenres.Response) {
+        let genres = response.genreModel?.genres ?? []
+        let viewModel = Explore.FetchGenres.ViewModel(genres: genres)
+        viewController?.displayGenres(viewModel: viewModel)
+    }
+
 
 }

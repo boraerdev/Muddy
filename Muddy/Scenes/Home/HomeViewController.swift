@@ -255,7 +255,7 @@ extension HomeViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SliderMenuCell.identifier, for: indexPath) as? SliderMenuCell else {
                 return .init()
             }
-            cell.configure(MovieGender(rawValue: indexPath.row) ?? .popular)
+            cell.configure(MovieGender(rawValue: indexPath.row)?.toString ?? "")
             return cell
         }
         
@@ -302,7 +302,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == sliderMenuCollectionView {
             let estimatedCell = SliderMenuCell(frame: .init(x: 0, y: 0, width: 1000, height: 40))
-            estimatedCell.configure(MovieGender(rawValue: indexPath.row) ?? .popular)
+            estimatedCell.configure(MovieGender(rawValue: indexPath.row)?.toString ?? "")
             estimatedCell.layoutIfNeeded()
             let estimatedSizeCell = estimatedCell.systemLayoutSizeFitting(.init(width: 1000, height: 40))
             return .init(width: estimatedSizeCell.width, height: 40)

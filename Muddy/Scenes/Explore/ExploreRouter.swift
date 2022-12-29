@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol ExploreRoutingLogic {
-    //func routeToSomewhere(segue: UIStoryboardSegue?)
+    func routeToDetail(target: MovieDetailViewController)
 }
 
 protocol ExploreDataPassing {
@@ -47,4 +47,23 @@ class ExploreRouter: NSObject, ExploreRoutingLogic, ExploreDataPassing {
     //{
     //  destination.name = source.name
     //}
+    
+    func routeToDetail(target: MovieDetailViewController) {
+        var destinationDS = target.router!.dataStore!
+        passDataToMovieDetail(source: dataStore!, destination: &destinationDS)
+        navigateToMovieDetail(source: viewController!, destination: target)
+    }
+    
+    // MARK: Navigation
+    func navigateToMovieDetail(source: ExploreViewController, destination: MovieDetailViewController)
+    {
+        destination.modalPresentationStyle = .overCurrentContext
+        source.show(destination, sender: nil)
+    }
+    
+    // MARK: Passing data
+    func passDataToMovieDetail(source: ExploreDataStore, destination: inout MovieDetailDataStore)
+    {
+        destination.selectedMovie = source.selectedMovie ?? MockData.Result
+    }
 }

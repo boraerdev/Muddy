@@ -17,7 +17,7 @@ final class MovieCollectionViewCell: CollectionViewSlantedCell {
     private lazy var movieImage = UIImageView(image: nil, contentMode: .scaleAspectFill)
     
     private lazy var title: UILabel = {
-        let label =  UILabel(text: nil, font: .systemFont(ofSize: 17, weight: .bold), textColor: .white, textAlignment: .left, numberOfLines: 2)
+        let label =  UILabel(text: nil, font: .systemFont(ofSize: 17, weight: .light), textColor: .white, textAlignment: .left, numberOfLines: 2)
         label.transform = .init(rotationAngle: -Double.pi / 20)
         return label
     }()

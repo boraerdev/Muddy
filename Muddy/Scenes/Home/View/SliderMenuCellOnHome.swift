@@ -19,10 +19,12 @@ class SliderMenuCell: UICollectionViewCell {
         layer.cornerRadius = 20
         layer.cornerCurve = .continuous
         stack(genderTitle).withMargins(.init(top: 4, left: 20, bottom: 4, right: 20))
+        withBorder(width: 1, color: .systemGray5)
     }
     
-    func configure(_ gender: MovieGender) {
-        genderTitle.text = gender.toString
+    func configure(_ value: String) {
+        genderTitle.text = value
+        
     }
     
     override func prepareForReuse() {
