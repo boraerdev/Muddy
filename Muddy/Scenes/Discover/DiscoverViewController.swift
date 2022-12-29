@@ -18,6 +18,21 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     var router: (NSObjectProtocol & DiscoverRoutingLogic & DiscoverDataPassing)?
     
     // MARK: UI Components
+    private lazy var mainCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = .init(width: view.frame.size.width, height: view.frame.size.height)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        layout.scrollDirection = .horizontal
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collection.delegate = self
+        collection.dataSource = self
+        collection.showsHorizontalScrollIndicator = false
+        //collection.isScrollEnabled = false
+        collection.isPagingEnabled = true
+        return collection
+    }()
     
     private lazy var backgroundImage = UIImageView(image: .init(named: "collectionBG"), contentMode: .scaleAspectFill)
     
@@ -27,7 +42,8 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         tv.layer.cornerRadius = 8
         tv.font = .systemFont(ofSize: 15)
         tv.layer.cornerCurve = .continuous
-        tv.backgroundColor = .white.withAlphaComponent(0.2)
+        tv.backgroundColor = .systemGray5.withAlphaComponent(0.5)
+        tv.withBorder(width: 1, color: .systemGray5)
         return tv
     }()
     
@@ -77,56 +93,58 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
 //MARK : UI Funcs
 extension DiscoverViewController {
     private func setupUI() {
-        view.addSubview(backgroundImage)
-        backgroundImage.anchor(
-            top: view.topAnchor,
-            leading: view.leadingAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            trailing: view.trailingAnchor)
-        prepareGradient()
-        
         let container = prepareMainContainer()
-
+        
         container.stack(
-            textInput()
+            view1(color: .red, supView: container),
+            view1(color: .black, supView: container),
+            view1(color: .orange, supView: container),
+            spacing: 0
         )
         
         
     }
+    @objc func didTapScroll() {
+        print("a")
+        mainCollectionView.scrollToItem(at: .init(item: 1, section: 0), at: .centeredVertically, animated: true)
+    }
+    
+    private func view1(color: UIColor, supView: UIView) -> UIView {
+        let container = UIView(backgroundColor: color)
+        let guide = view.safeAreaLayoutGuide
+        
+        return container.withSize(.init(width: view.frame.size.width, height: guide.layoutFrame.height - (tabBarController?.tabBar.frame.height ?? 0)))
+    }
     
     private func prepareMainContainer() -> UIView {
         let scroll = UIScrollView()
+        scroll.isPagingEnabled = true
         view.addSubview(scroll)
         scroll.fillSuperviewSafeAreaLayoutGuide()
         return scroll
     }
     
-    private func textInput() -> UIView {
-        let container = UIView()
-        
-        lazy var title = UILabel(
-            text: "Explain Your Mood",
-            font: .systemFont(ofSize: 22, weight: .bold),
-            textColor: .white,
-            textAlignment: .center,
-            numberOfLines: 1)
-        
-        container.stack(
-            title,
-            container.hstack(
-                textView.withSize(.init(width: view.frame.width - 36, height: 100))
-            ).withMargins(.init(top: 0, left: 16, bottom: 00, right: 16))
-        )
-
-        
-        return container
-    }
     
+
     private func prepareGradient() {
         DispatchQueue.main.async { [unowned self] in
-            backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
+            backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0.5), endPoint: .init(x: 0.5, y: 0))
             backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.3))
             
         }
     }
+}
+
+extension DiscoverViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.backgroundColor = indexPath.row % 2 == 0 ? .red:.yellow
+        return cell
+    }
+    
+    
 }

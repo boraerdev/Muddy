@@ -80,7 +80,7 @@ class HomeHeaderView: UIViewController {
         
         let voteAvarage = UILabel(text: "\(movie.voteAverage)",
                         font: .systemFont(ofSize: 13, weight: .light),
-                        textColor: .red,
+                                  textColor: .orange,
                         numberOfLines: 1)
 
         let overview = UILabel(text: "\(movie.overview)",
@@ -88,7 +88,7 @@ class HomeHeaderView: UIViewController {
                         textColor: .secondaryLabel,
                         numberOfLines: 2)
         container.stack(
-            container.hstack(title, voteAvarage, spacing: 10),
+            container.hstack(title, voteAvarage, spacing: 10, alignment: .center),
             overview.withWidth(300),
             showBtn.withSize(.init(width: 150, height: 50)),
             relaseDate,
@@ -111,7 +111,7 @@ class HomeHeaderView: UIViewController {
     }
     
     private func fetchImage() {
-        guard let url = URL(string: APIEndpoint.Image.orgImage(path: movie.backdropPath).toString) else {return}
+        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .original, path: movie.backdropPath).toString) else {return}
         imageView.kf.setImage(
             with: url
         )

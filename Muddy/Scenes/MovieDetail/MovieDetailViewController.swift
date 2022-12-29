@@ -542,7 +542,8 @@ extension MovieDetailViewController {
     }
     
     private func fetchMovieImage() {
-        guard let bgurl = URL(string: APIEndpoint.Image.mediumBackdropImage(path: router?.dataStore?.selectedMovie.backdropPath ?? "").toString) else {
+        let movie = router?.dataStore?.selectedMovie
+        guard let bgurl = URL(string: APIEndpoint.Image.withQuality(quality: .w300, path: movie?.backdropPath ?? "").toString) else {
             return
         }
         movieBackgropImage.kf.setImage(
@@ -550,7 +551,7 @@ extension MovieDetailViewController {
             options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]
         )
         
-        guard let posterUrl = URL(string: APIEndpoint.Image.lowPosterImage(path: router?.dataStore?.selectedMovie.posterPath ?? "").toString) else {return}
+        guard let posterUrl = URL(string: APIEndpoint.Image.withQuality(quality: .w154, path: movie?.posterPath ?? "").toString) else {return}
         posterImageView.kf.setImage(
             with: posterUrl,
             options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]

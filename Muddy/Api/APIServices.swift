@@ -7,6 +7,34 @@
 
 import Foundation
 
+
+//|  poster  | backdrop |  still   | profile  |   logo   |
+//| :------: | :------: | :------: | :------: | :------: |
+//| -------- | -------- | -------- |    w45   |    w45   |
+//|    w92   | -------- |    w92   | -------- |    w92   |
+//|   w154   | -------- | -------- | -------- |   w154   |
+//|   w185   | -------- |   w185   |   w185   |   w185   |
+//| -------- |   w300   |   w300   | -------- |   w300   |
+//|   w342   | -------- | -------- | -------- | -------- |
+//|   w500   | -------- | -------- | -------- |   w500   |
+//| -------- | -------- | -------- |   h632   | -------- |
+//|   w780   |   w780   | -------- | -------- | -------- |
+//| -------- |  w1280   | -------- | -------- | -------- |
+//| original | original | original | original | original |
+
+let BASE_URL = "https://api.themoviedb.org/3"
+let IMAGE_BASE = "https://image.tmdb.org/t/p/"
+let KEY = "11a3a258ed1e7a614d3539784ff8e9e9"
+
+//You can add case to enum
+enum ImageQuality: String {
+    case original
+    case w154
+    case w185
+    case w300
+    case w780
+}
+
 enum APIEndpoint {
     
     enum Movie {
@@ -23,10 +51,7 @@ enum APIEndpoint {
     }
     
     enum Image {
-        case orgImage(path: String)
-        case lowPosterImage(path: String)
-        case mediumBackdropImage(path: String)
-        case mediumCastImage(path: String)
+        case withQuality(quality: ImageQuality, path: String)
     }
     
 }
@@ -62,14 +87,8 @@ extension APIEndpoint.Movie {
 extension APIEndpoint.Image {
     var toString: String {
         switch self {
-        case .orgImage(let path):
-            return O_IMAGE_BASE + path
-        case .lowPosterImage(let path):
-            return L_IMAGE_BASE + path
-        case .mediumBackdropImage(path: let path):
-            return M_IMAGE_BASE_BACKDROP + path
-        case .mediumCastImage(let path):
-            return M_IMAGE_BASE_CAST + path
+        case .withQuality(quality: let quality, path: let path):
+            return IMAGE_BASE + quality.rawValue + path
         }
     }
 }

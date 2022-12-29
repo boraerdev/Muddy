@@ -26,7 +26,7 @@ final class RecommendationsCollectionViewCell: UICollectionViewCell {
     }
     
     public func configure(movie: Result) {
-        guard let url = URL(string: APIEndpoint.Image.lowPosterImage(path: movie.posterPath).toString) else {
+        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .w154, path: movie.posterPath).toString) else {
             return
         }
         movieImage.kf.setImage(
