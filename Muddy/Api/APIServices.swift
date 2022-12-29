@@ -56,11 +56,11 @@ enum APIEndpoint {
     
 }
 
-
+//TODO: Refactor this endpoint
 extension APIEndpoint.Movie {
     var toString: String {
         switch self {
-        case APIEndpoint.Movie.popularMovies:
+        case .popularMovies:
             return BASE_URL + "/movie/popular" + "?api_key=" + KEY
         case .upcomingMovies:
             return BASE_URL + "/movie/upcoming" + "?api_key=" + KEY

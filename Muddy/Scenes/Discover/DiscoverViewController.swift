@@ -18,21 +18,6 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     var router: (NSObjectProtocol & DiscoverRoutingLogic & DiscoverDataPassing)?
     
     // MARK: UI Components
-    private lazy var mainCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = .init(width: view.frame.size.width, height: view.frame.size.height)
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
-        layout.scrollDirection = .horizontal
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collection.delegate = self
-        collection.dataSource = self
-        collection.showsHorizontalScrollIndicator = false
-        //collection.isScrollEnabled = false
-        collection.isPagingEnabled = true
-        return collection
-    }()
     
     private lazy var backgroundImage = UIImageView(image: .init(named: "collectionBG"), contentMode: .scaleAspectFill)
     
@@ -96,36 +81,32 @@ extension DiscoverViewController {
         let container = prepareMainContainer()
         
         container.stack(
-            view1(color: .red, supView: container),
-            view1(color: .black, supView: container),
-            view1(color: .orange, supView: container),
-            spacing: 0
+            topView(),
+            topView()
         )
         
         
     }
-    @objc func didTapScroll() {
-        print("a")
-        mainCollectionView.scrollToItem(at: .init(item: 1, section: 0), at: .centeredVertically, animated: true)
-    }
     
-    private func view1(color: UIColor, supView: UIView) -> UIView {
-        let container = UIView(backgroundColor: color)
-        let guide = view.safeAreaLayoutGuide
-        
-        return container.withSize(.init(width: view.frame.size.width, height: guide.layoutFrame.height - (tabBarController?.tabBar.frame.height ?? 0)))
+    private func createContainer() -> UIView {
+        let container = UIView()
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first
+        let top    = window?.safeAreaInsets.top ?? 0
+        let height = self.tabBarController?.tabBar.frame.height ?? 49.0
+        return container.withSize(.init(width: view.frame.size.width, height: view.frame.height - top  - height))
     }
     
     private func prepareMainContainer() -> UIView {
         let scroll = UIScrollView()
         scroll.isPagingEnabled = true
+        scroll.showsVerticalScrollIndicator = false
         view.addSubview(scroll)
         scroll.fillSuperviewSafeAreaLayoutGuide()
         return scroll
     }
     
-    
-
     private func prepareGradient() {
         DispatchQueue.main.async { [unowned self] in
             backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0.5), endPoint: .init(x: 0.5, y: 0))
@@ -133,18 +114,25 @@ extension DiscoverViewController {
             
         }
     }
-}
-
-extension DiscoverViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        3
+    
+    private func topView() -> UIView {
+        let container = createContainer()
+        
+        let cona = UIView()
+        
+        cona.hstack(
+            UIView(backgroundColor: .red),
+            UIView(backgroundColor: .blue),
+            UIView(backgroundColor: .yellow),
+            spacing: 10,
+            distribution: .fillEqually
+        )
+        
+        container.stack(
+            cona.withHeight(200),
+            UIView()
+        )
+        
+        return container
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = indexPath.row % 2 == 0 ? .red:.yellow
-        return cell
-    }
-    
-    
 }

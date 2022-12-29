@@ -67,6 +67,7 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
     private lazy var recommendaionsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        
         layout.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         layout.itemSize = .init(width: 135, height: 200)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)

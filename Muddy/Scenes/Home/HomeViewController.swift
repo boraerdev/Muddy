@@ -13,6 +13,7 @@ protocol HomeDisplayLogic: AnyObject {
     func displayMovies(viewModel: Home.HomeMovies.ViewModel)
 }
 
+//TODO: Refactor UI codes like ExploreViewController.swift
 final class HomeViewController: UIViewController {
     var interactor: HomeBusinessLogic?
     var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
