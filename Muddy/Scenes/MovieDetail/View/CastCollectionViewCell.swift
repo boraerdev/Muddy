@@ -35,6 +35,7 @@ final class CastCollectionViewCell: UICollectionViewCell {
         castImage.tintColor = .white
         castImage.layer.cornerRadius = 8
         castImage.layer.cornerCurve = .continuous
+        castImage.backgroundColor = .systemGray5.withAlphaComponent(0.5)
         
         stack(
             castImage.withSize(.init(width: 100, height: 100)),
@@ -66,3 +67,6 @@ final class CastCollectionViewCell: UICollectionViewCell {
         characterName.text = nil
     }
 }
+
+
+

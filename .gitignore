@@ -101,4 +101,4 @@ iOSInjectionProject/
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode
 
 APIServices.swift
-Muddy/Api/APIServices.swift
+Muddy/API/APIServices.swift

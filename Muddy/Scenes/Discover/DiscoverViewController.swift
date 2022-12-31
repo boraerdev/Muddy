@@ -13,7 +13,7 @@ protocol DiscoverDisplayLogic: AnyObject {
     func displaySomething(viewModel: Discover.Something.ViewModel)
 }
 
-class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
+final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     var interactor: DiscoverBusinessLogic?
     var router: (NSObjectProtocol & DiscoverRoutingLogic & DiscoverDataPassing)?
     
@@ -31,6 +31,8 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         tv.withBorder(width: 1, color: .systemGray5)
         return tv
     }()
+    
+    private lazy var bg = bgView()
     
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -60,6 +62,8 @@ class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(bg)
+        bg.fillSuperview()
         doSomething()
         setupUI()
     }
@@ -81,8 +85,8 @@ extension DiscoverViewController {
         let container = prepareMainContainer()
         
         container.stack(
-            topView(),
-            topView()
+//            topView(),
+//            topView()
         )
         
         
@@ -99,7 +103,7 @@ extension DiscoverViewController {
     }
     
     private func prepareMainContainer() -> UIView {
-        let scroll = UIScrollView()
+        let scroll = UIScrollView(backgroundColor: .clear)
         scroll.isPagingEnabled = true
         scroll.showsVerticalScrollIndicator = false
         view.addSubview(scroll)
@@ -119,20 +123,158 @@ extension DiscoverViewController {
         let container = createContainer()
         
         let cona = UIView()
+        let a = UIView(backgroundColor: .red)
+        a.transform = .init(rotationAngle: -Double.pi/20)
         
-        cona.hstack(
-            UIView(backgroundColor: .red),
-            UIView(backgroundColor: .blue),
+        cona.stack(
+            a,
+            a,
             UIView(backgroundColor: .yellow),
             spacing: 10,
             distribution: .fillEqually
         )
         
+        cona.clipsToBounds = true
+        
         container.stack(
-            cona.withHeight(200),
+            cona.withHeight(500),
             UIView()
         )
         
         return container
     }
+}
+
+final class bgView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        let container = UIView()
+        let reds = UIView()
+        let blues = UIView()
+        let greens = UIView()
+        addSubview(container)
+        container.fillSuperview()
+        reds.addSubview(c1)
+        reds.addSubview(c2)
+        reds.addSubview(c3)
+        blues.addSubview(c1blue)
+        blues.addSubview(c2blue)
+        blues.addSubview(c3blue)
+        greens.addSubview(c1green)
+        greens.addSubview(c2green)
+        greens.addSubview(c3green)
+        addSubview(greens)
+        addSubview(reds)
+        addSubview(blues)
+        
+        
+        [c1,c2,c3,c1blue,c2blue,c3blue,c1green,c2green,c3green, reds,blues, greens].forEach { v in
+            v.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        reds.anchor(.top(topAnchor), .leading(leadingAnchor, constant: -20))
+        NSLayoutConstraint.activate([
+            
+            c1.centerXAnchor.constraint(equalTo: reds.centerXAnchor),
+            c1.centerYAnchor.constraint(equalTo: reds.centerYAnchor),
+
+            
+            c2.centerXAnchor.constraint(equalTo: reds.centerXAnchor),
+            c2.centerYAnchor.constraint(equalTo: reds.centerYAnchor),
+            
+            c3.centerXAnchor.constraint(equalTo: reds.centerXAnchor),
+            c3.centerYAnchor.constraint(equalTo: reds.centerYAnchor)
+        ])
+        
+        blues.anchor(.trailing(trailingAnchor,constant: -50), .bottom(bottomAnchor,constant: -100))
+        NSLayoutConstraint.activate([
+            
+            c1blue.centerXAnchor.constraint(equalTo: blues.centerXAnchor),
+            c1blue.centerYAnchor.constraint(equalTo: blues.centerYAnchor),
+
+            
+            c2blue.centerXAnchor.constraint(equalTo: blues.centerXAnchor),
+            c2blue.centerYAnchor.constraint(equalTo: blues.centerYAnchor),
+            
+            c3blue.centerXAnchor.constraint(equalTo: blues.centerXAnchor),
+            c3blue.centerYAnchor.constraint(equalTo: blues.centerYAnchor)
+        ])
+        
+        greens.anchor(.trailing(trailingAnchor))
+        NSLayoutConstraint.activate([
+            
+            c1green.centerXAnchor.constraint(equalTo: greens.centerXAnchor),
+            c1green.centerYAnchor.constraint(equalTo: greens.centerYAnchor),
+
+            
+            c2green.centerXAnchor.constraint(equalTo: greens.centerXAnchor),
+            c2green.centerYAnchor.constraint(equalTo: greens.centerYAnchor),
+            
+            c3green.centerXAnchor.constraint(equalTo: greens.centerXAnchor),
+            c3green.centerYAnchor.constraint(equalTo: greens.centerYAnchor)
+        ])
+        
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [unowned self] timer in
+            makeAnimation(for: reds)
+            makeAnimation(for: blues)
+            makeAnimation(for: greens)
+        }
+        
+        
+        addSubview(blur)
+        addSubview(dark)
+        dark.fillSuperview()
+        blur.layer.opacity = 1
+        blur.fillSuperview()
+    }
+    
+    private func makeAnimation(for view: UIView)  {
+        let randomY = Int(arc4random() % (UInt32(frame.height)+1))
+        let randomX = Int(arc4random() % (UInt32(frame.width)+1))
+        
+        let newX = randomX - Int(view.frame.width) / 2
+        let newY = randomY - Int(view.frame.height) / 2
+        
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 2, delay: 0) {
+                    view.frame = .init(x: CGFloat(newX) , y: CGFloat(newY), width: view.frame.width, height: view.frame.height)
+                }
+            }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let dark = UIView(backgroundColor: .black.withAlphaComponent(0.5))
+    var blur = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
+    var  c1 = drawCircle(size: 350, color: .red.withAlphaComponent(0.2))
+    var  c2 = drawCircle(size: 250, color: .red.withAlphaComponent(0.25))
+    var  c3 = drawCircle(size: 150, color: .red.withAlphaComponent(0.3))
+    
+    var  c1blue = drawCircle(size: 350, color: .blue.withAlphaComponent(0.2))
+    var  c2blue = drawCircle(size: 250, color: .blue.withAlphaComponent(0.25))
+    var  c3blue = drawCircle(size: 150, color: .blue.withAlphaComponent(0.3))
+    
+    var  c1green = drawCircle(size: 350, color: .purple.withAlphaComponent(0.2))
+    var  c2green = drawCircle(size: 250, color: .purple.withAlphaComponent(0.25))
+    var  c3green = drawCircle(size: 150, color: .purple.withAlphaComponent(0.3))
+
+    
+}
+
+func drawCircle(size: CGFloat, color: UIColor) -> UIView {
+  let circleView = UIView()
+  let circlePath = UIBezierPath(arcCenter: CGPoint(x: size / 2, y: size / 2), radius: size / 2, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+
+  let shapeLayer = CAShapeLayer()
+  shapeLayer.path = circlePath.cgPath
+  shapeLayer.fillColor = color.cgColor
+    shapeLayer.strokeColor = UIColor.red.cgColor
+  shapeLayer.lineWidth = 0
+
+  circleView.layer.addSublayer(shapeLayer)
+    circleView.frame = .zero
+    circleView.withSize(.init(width: size, height: size))
+  return circleView
 }
