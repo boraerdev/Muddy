@@ -226,12 +226,12 @@
 			path = MovieDetail;
 			sourceTree = "<group>";
 		};
-		0AAF0E5B2954C7C100F4B74E /* Api */ = {
+		0AAF0E5B2954C7C100F4B74E /* API */ = {
 			isa = PBXGroup;
 			children = (
 				0AF1A58E29525AB700895A65 /* APIServices.swift */,
 			);
-			path = Api;
+			path = API;
 			sourceTree = "<group>";
 		};
 		0AC66D6F2953884500905542 /* View */ = {
@@ -274,7 +274,7 @@
 		0AF1A5372952021900895A65 /* Muddy */ = {
 			isa = PBXGroup;
 			children = (
-				0AAF0E5B2954C7C100F4B74E /* Api */,
+				0AAF0E5B2954C7C100F4B74E /* API */,
 				0A87CAEE29532DBA00B98BE0 /* Extensions */,
 				0AF1A5892952455200895A65 /* Helpers */,
 				0AF1A586295242D200895A65 /* Models */,
