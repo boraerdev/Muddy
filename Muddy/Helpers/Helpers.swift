@@ -17,6 +17,42 @@ func getYearFromDate(dateString: String) -> String {
 
 import UIKit
 
+func shakeImageView(imageView: UIImageView) {
+    let shake = CAKeyframeAnimation(keyPath: "transform.translation.x")
+    shake.duration = 0.1
+    shake.repeatCount = 2
+    shake.autoreverses = true
+
+    let fromValue = -8
+    let toValue = 8
+
+    shake.values = [fromValue, toValue]
+
+    CATransaction.begin()
+    imageView.layer.add(shake, forKey: "shake")
+    CATransaction.setCompletionBlock {
+        imageView.transform = CGAffineTransform.identity
+    }
+    CATransaction.commit()
+}
+
+func drawCircle(size: CGFloat, color: UIColor) -> UIView {
+  let circleView = UIView()
+  let circlePath = UIBezierPath(arcCenter: CGPoint(x: size / 2, y: size / 2), radius: size / 2, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+
+  let shapeLayer = CAShapeLayer()
+  shapeLayer.path = circlePath.cgPath
+  shapeLayer.fillColor = color.cgColor
+    shapeLayer.strokeColor = UIColor.red.cgColor
+  shapeLayer.lineWidth = 0
+
+  circleView.layer.addSublayer(shapeLayer)
+    circleView.frame = .zero
+    circleView.withSize(.init(width: size, height: size))
+  return circleView
+}
+
+
 func createRatingView(score: Double) -> UIView {
     let starSize: CGFloat = 20
   let ratingView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: starSize))
