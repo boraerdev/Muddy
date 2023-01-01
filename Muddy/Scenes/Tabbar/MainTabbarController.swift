@@ -10,7 +10,7 @@ import LBTATools
 
 class MainTabbarController: UITabBarController  {
     
-    private lazy var discoverBtn: UIButton = {
+    public var discoverBtn: UIButton = {
         let btn = UIButton(image: .init(named: "logo")!, action: #selector(didTapMain))
         btn.backgroundColor = .red
         
@@ -39,6 +39,7 @@ class MainTabbarController: UITabBarController  {
         tabBar.tintColor = .white
         tabBar.shadowImage = nil
         tabBar.backgroundImage = nil
+        tabBar.backgroundColor = .black
 
         //Main Button
         view.addSubview(discoverBtn)

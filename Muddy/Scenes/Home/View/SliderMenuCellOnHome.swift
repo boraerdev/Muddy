@@ -16,7 +16,7 @@ class SliderMenuCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemGray5.withAlphaComponent(0.5)
-        layer.cornerRadius = 20
+        layer.cornerRadius = 8
         layer.cornerCurve = .continuous
         stack(genderTitle).withMargins(.init(top: 4, left: 20, bottom: 4, right: 20))
         withBorder(width: 1, color: .systemGray5)

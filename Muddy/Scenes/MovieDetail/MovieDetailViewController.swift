@@ -165,6 +165,7 @@ class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
 // MARK: UI
 extension MovieDetailViewController {
     private func setupUI() {
+        
         view.backgroundColor = .black
         headerContainer = prepareHeader()
         mainContainer = prepareMainContainer()
@@ -178,12 +179,7 @@ extension MovieDetailViewController {
             spacing: 10
         )
         
-        //Preapre gradient for header
-        DispatchQueue.main.async { [unowned self] in
-            movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
-            movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 1))
-        }
-        
+        handleGradientsForHeader()
     }
     
     private func prepareHeader() -> UIView{
@@ -489,6 +485,7 @@ extension MovieDetailViewController {
     
 }
 
+// MARK: Collection - Data - Delegate
 extension MovieDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
@@ -530,6 +527,14 @@ extension MovieDetailViewController: UICollectionViewDataSource, UICollectionVie
 
 // MARK: Funcs
 extension MovieDetailViewController {
+    
+    private func handleGradientsForHeader() {
+        DispatchQueue.main.async { [unowned self] in
+            movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
+            movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 1))
+        }
+    }
+    
     private func makeGenreString() -> String {
         var genresString = ""
         movie?.genres?.forEach({ genre in

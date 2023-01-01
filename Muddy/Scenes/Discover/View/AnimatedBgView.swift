@@ -55,7 +55,7 @@ final class AnimatedBgView: UIView {
             v.translatesAutoresizingMaskIntoConstraints = false
         }
 
-        reds.anchor(.top(topAnchor), .leading(leadingAnchor, constant: -20))
+        reds.anchor(.top(topAnchor, constant: 120), .leading(leadingAnchor, constant: -20))
         NSLayoutConstraint.activate([
             
             c1.centerXAnchor.constraint(equalTo: reds.centerXAnchor),
@@ -69,7 +69,7 @@ final class AnimatedBgView: UIView {
             c3.centerYAnchor.constraint(equalTo: reds.centerYAnchor)
         ])
         
-        blues.anchor(.trailing(trailingAnchor,constant: -50), .bottom(bottomAnchor,constant: -100))
+        blues.anchor(.trailing(trailingAnchor,constant: -50), .bottom(bottomAnchor,constant: 80))
         NSLayoutConstraint.activate([
             
             c1blue.centerXAnchor.constraint(equalTo: blues.centerXAnchor),
@@ -110,6 +110,7 @@ final class AnimatedBgView: UIView {
         addSubview(dark)
         dark.fillSuperview()
         blur.fillSuperview()
+        clipsToBounds = true
     }
     
     private func makeAnimation(for view: UIView)  {

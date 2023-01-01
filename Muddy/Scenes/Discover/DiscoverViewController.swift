@@ -21,9 +21,6 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     private var timer: Timer!
     
     // MARK: UI Components
-    
-    private lazy var backgroundImage = UIImageView(image: .init(named: "collectionBG"), contentMode: .scaleAspectFill)
-    
     private lazy var textView: UITextView = {
         let tv = UITextView(backgroundColor: .clear)
         tv.withBorder(width: 1, color: .white)
@@ -36,6 +33,8 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     }()
     
     private lazy var bg = AnimatedBgView()
+    
+
     
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -65,8 +64,6 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(bg)
-        bg.fillSuperview()
         doSomething()
         setupUI()
     }
@@ -89,14 +86,18 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
 //MARK : UI Funcs
 extension DiscoverViewController {
     private func setupUI() {
+        view.addSubview(bg)
+        bg.anchor(.top(view.topAnchor), .leading(view.leadingAnchor),.trailing(view.trailingAnchor), .bottom(view.safeAreaLayoutGuide.bottomAnchor))
+        
         let container = prepareMainContainer()
         
         container.stack(
             topView(),
-            topView()
+            inputView()
         )
-        view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0.9), endPoint: .init(x: 0.5, y: 0.7))
-        view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.3))
+        
+        prepareGradient()
+        
     }
     
     private func createContainer() -> UIView {
@@ -110,7 +111,8 @@ extension DiscoverViewController {
     }
     
     private func prepareMainContainer() -> UIView {
-        let scroll = UIScrollView(backgroundColor: .clear)
+        let scroll = UIScrollView()
+        scroll.delegate = self
         scroll.isPagingEnabled = true
         scroll.showsVerticalScrollIndicator = false
         view.addSubview(scroll)
@@ -120,38 +122,19 @@ extension DiscoverViewController {
     
     private func prepareGradient() {
         DispatchQueue.main.async { [unowned self] in
-            backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0.5), endPoint: .init(x: 0.5, y: 0))
-            backgroundImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.3))
-            
+            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0.7))
+            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.3))
         }
-    }
-    
-    func shakeLabel(label: UILabel) {
-        let shake = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        shake.duration = 0.1
-        shake.repeatCount = 2
-        shake.autoreverses = true
-
-        let fromValue = -8
-        let toValue = 8
-
-        shake.values = [fromValue, toValue]
-
-        CATransaction.begin()
-        label.layer.add(shake, forKey: "shake")
-        CATransaction.setCompletionBlock {
-            label.transform = CGAffineTransform.identity
-        }
-        CATransaction.commit()
     }
     
     private func topView() -> UIView {
         let container = createContainer()
         
-        let logo = UIImageView(image: .init(named: "logo"), contentMode: .scaleAspectFit)
-
-        let title = UILabel(text: "Welcome to Muddy", font: .systemFont(ofSize: 34, weight: .semibold), textColor: .white, textAlignment: .center, numberOfLines: 0)
-        
+        //Content
+        let logo = UIImageView(
+            image: .init(named: "logo"), contentMode: .scaleAspectFit)
+        let title = UILabel(
+            text: "Let's Muddy!", font: .systemFont(ofSize: 34, weight: .semibold), textColor: .white, textAlignment: .center, numberOfLines: 0)
         let overview = UILabel(
             text: "Get personalized movie recommendations based on your mood! Simply describe your current emotional state, and our AI will suggest a selection of films to match. Try it out and find the perfect movie to suit your mood.",
             font: .systemFont(ofSize: 13, weight: .light),
@@ -159,13 +142,18 @@ extension DiscoverViewController {
             textAlignment: .center,
             numberOfLines: 0)
         
+        //Swpie button
+        let swipeBtn = UIImageView(image: .init(systemName: "chevron.down"), contentMode: .scaleAspectFit)
+        swipeBtn.withWidth(25)
+        swipeBtn.tintColor = .white
+
+        //Swipe circles
         let circle1 = drawCircle(size: 5, color: .white)
         let circle2 = drawCircle(size: 5, color: .secondaryLabel)
-        let circle3 = drawCircle(size: 5, color: .secondaryLabel)
+        let swipeCircles = UIView()
+        swipeCircles.stack( circle1,circle2, spacing: 5, alignment: .center)
         
-        let swipeBtn = MainButton(title: "Swipe Down", imgName: "chevron.down", tintColor: .white, backgroundColor: .clear)
-        swipeBtn.titleLabel?.font = .systemFont(ofSize: 13, weight: .light)
-        
+        //Layout
         container.stack(
             UIView(),
             logo.withHeight(300),
@@ -173,12 +161,12 @@ extension DiscoverViewController {
             title,
             container.hstack(overview).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16)),
             swipeBtn,
-            container.stack(
-                circle1,circle2,circle3, spacing: 5, alignment: .center
-            ),
+            swipeCircles,
             spacing: 10
         ).padBottom(50)
         
+        //Animation
+        shakeImageView(imageView: logo)
         timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { _ in
             shakeImageView(imageView: logo)
         }
@@ -186,5 +174,80 @@ extension DiscoverViewController {
         return container
     }
     
+    private func inputView() -> UIView {
+        let container = createContainer()
+        
+        //Swipe btn
+        let swipeBtn = UIImageView(image: .init(systemName: "chevron.up"), contentMode: .scaleAspectFit)
+        swipeBtn.withWidth(25)
+        swipeBtn.tintColor = .white
+        
+        //Input container
+        let textField = IndentedTextField(
+            placeholder: "What are you in the mood for? Comedy, drama, action, romance?",
+            padding: 10,
+            cornerRadius: 8,
+            keyboardType: .default,
+            backgroundColor: .systemGray5.withAlphaComponent(0.5),
+            isSecureTextEntry: false
+        )
+        textField.withBorder(width: 1, color: .systemGray5)
+        let micBtn = UIButton(
+            image: .init(systemName: "mic.fill")!,
+            tintColor: .secondaryLabel,
+            target: self,
+            action: #selector(didTapMic)
+        )
+        let inputContainer = UIView()
+        inputContainer.hstack(
+            textField.withHeight(45), micBtn.withWidth(25), spacing: 10
+        ).padLeft(16).padRight(16)
+        
+        //SwipeCircles
+        let circle1 = drawCircle(size: 5, color: .secondaryLabel)
+        let circle2 = drawCircle(size: 5, color: .white)
+        let swipeCircles = UIView()
+        swipeCircles.stack( circle1,circle2, spacing: 5, alignment: .center)
+
+
+        
+        container.stack(
+            swipeCircles,
+            swipeBtn,
+            inputContainer,
+            UIView(),
+            spacing: 10
+        ).padTop(10)
+        
+        
+        return container
+    }
     
+}
+
+extension DiscoverViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        guard let tabBarController = tabBarController as? MainTabbarController else {
+            return
+        }
+        
+        if offsetY > 150 {
+            tabBarController.discoverBtn.isHidden = true
+            tabBarController.tabBar.isHidden = true
+            tabBarController.tabBar.layer.zPosition = -1
+        }
+        
+        if offsetY < 450 {
+            tabBarController.discoverBtn.isHidden = false
+            tabBarController.tabBar.isHidden = false
+            tabBarController.tabBar.layer.zPosition = 0
+        }
+    }
+}
+
+extension DiscoverViewController {
+    @objc func didTapMic() {
+        
+    }
 }
