@@ -86,7 +86,7 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: Fetch
     func fetchMovies(for text: String) {
         let request = Discover.FetchMovies.Request(text: text)
-        Task {await interactor?.fetchMovies(request:request)}
+        Task {try await interactor?.fetchMovies(request:request)}
     }
     
     // MARK: Display
@@ -258,7 +258,6 @@ extension DiscoverViewController: UITextFieldDelegate {
         guard textField.text != nil, textField.text != "" else {
             return true
         }
-        print("gönderildi: \(textField.text!)")
         fetchMovies(for: textField.text!)
         return true
     }

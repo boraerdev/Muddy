@@ -316,6 +316,7 @@ extension ExploreViewController: CollectionViewDelegateSlantedLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch collectionView {
         case sliderMenuCollectionView:
+            discoverMovies.removeAll(keepingCapacity: false)
             fetchGenreMovies(params: "&with_genres=\(genres[indexPath.row].id ?? 1)")
             updateSelectedGenreBorder(indexPath,collectionView)
             lastSelectedGenreIndexPath = indexPath
@@ -347,6 +348,7 @@ extension ExploreViewController: UITextFieldDelegate {
             showClearBtn(true)
             return false
         }
+        discoverMovies.removeAll(keepingCapacity: false)
         showClearBtn(true)
         fetchSearch()
         return true

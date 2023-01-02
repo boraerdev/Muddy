@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ContactDisplayLogic: class {
+protocol ContactDisplayLogic: AnyObject {
     func displaySomething(viewModel: Contact.Something.ViewModel)
 }
 

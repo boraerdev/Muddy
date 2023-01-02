@@ -36,6 +36,16 @@ func shakeImageView(imageView: UIImageView) {
     CATransaction.commit()
 }
 
+func extractQuotedStrings(from paragraph: String) -> [String] {
+    let pattern = "\"(.*?)\""
+    let regex = try! NSRegularExpression(pattern: pattern)
+    let matches = regex.matches(in: paragraph, range: NSRange(paragraph.startIndex..., in: paragraph))
+    return matches.map {
+        let range = Range($0.range, in: paragraph)!
+        return String(paragraph[range]).replacingOccurrences(of: "\"", with: "")
+    }
+}
+
 func drawCircle(size: CGFloat, color: UIColor) -> UIView {
   let circleView = UIView()
   let circlePath = UIBezierPath(arcCenter: CGPoint(x: size / 2, y: size / 2), radius: size / 2, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)

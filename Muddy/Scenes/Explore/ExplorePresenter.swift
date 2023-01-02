@@ -20,13 +20,15 @@ class ExplorePresenter: ExplorePresentationLogic {
     
     // MARK: Do something
     func presentDiscover(response: Explore.FetchDiscover.Response) {
-        let movies = response.discoverMoviws?.results ?? []
+        var movies = response.discoverMoviws?.results ?? []
+        movies = clearResults(for: movies)
         let viewModel = Explore.FetchDiscover.ViewModel(moviesList: movies)
         viewController?.displayDiscover(viewModel: viewModel)
     }
     
     func presentSearch(response: Explore.FetchSearch.Response) {
-        let movies = response.searchResult?.results ?? []
+        var movies = response.searchResult?.results ?? []
+        movies = clearResults(for: movies)
         let viewModel = Explore.FetchSearch.ViewModel(moviesList: movies)
         viewController?.displaySearcg(viewModel: viewModel)
     }
@@ -35,6 +37,16 @@ class ExplorePresenter: ExplorePresentationLogic {
         let genres = response.genreModel?.genres ?? []
         let viewModel = Explore.FetchGenres.ViewModel(genres: genres)
         viewController?.displayGenres(viewModel: viewModel)
+    }
+    
+    func clearResults(for movies: [Result]) -> [Result] {
+        return movies.compactMap({ res in
+            if res.backdropPath != nil {
+                return res
+            } else {
+                return nil
+            }
+        })
     }
 
 

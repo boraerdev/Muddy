@@ -15,9 +15,7 @@ class HomeWorker {
         guard let url = URL(string: urlString) else {return nil}
         do {
             let (data,_) = try await URLSession.shared.data(from: url)
-            let json = try JSONDecoder().decode(T.self, from: data)
-            print("WorkerURL: \(url.absoluteString)")
-            return json
+            return try JSONDecoder().decode(T.self, from: data)
         } catch { return nil }
     }
     

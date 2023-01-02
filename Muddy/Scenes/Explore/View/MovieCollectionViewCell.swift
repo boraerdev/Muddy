@@ -52,7 +52,7 @@ final class MovieCollectionViewCell: CollectionViewSlantedCell {
     }
     
     public func configure(movie: Result) {
-        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .w780, path: movie.backdropPath).toString) else {return}
+        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .w780, path: movie.backdropPath ?? "").toString) else {return}
         movieImage.kf.setImage(
             with: url,
             options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]
