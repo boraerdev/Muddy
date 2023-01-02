@@ -10,12 +10,15 @@ import UIKit
 
 enum Discover {
     // MARK: Use cases
-    enum Something {
+    enum FetchMovies {
         struct Request {
+            var text: String
         }
         struct Response {
+            var movies: [Result]
         }
         struct ViewModel {
+            var movies: [Result]
         }
     }
 }

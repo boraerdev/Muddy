@@ -10,10 +10,11 @@ import UIKit
 import LBTATools
 
 protocol DiscoverDisplayLogic: AnyObject {
-    func displaySomething(viewModel: Discover.Something.ViewModel)
+    func displayMovies(viewModel: Discover.FetchMovies.ViewModel)
 }
 
 final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
+    
     var interactor: DiscoverBusinessLogic?
     var router: (NSObjectProtocol & DiscoverRoutingLogic & DiscoverDataPassing)?
     
@@ -34,7 +35,18 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     
     private lazy var bg = AnimatedBgView()
     
-
+    private lazy var textField: IndentedTextField = {
+        let field = IndentedTextField(
+            placeholder: "What are you in the mood for? Comedy, drama, action, romance?",
+            padding: 10,
+            cornerRadius: 8,
+            keyboardType: .default,
+            backgroundColor: .systemGray5.withAlphaComponent(0.5),
+            isSecureTextEntry: false
+        )
+        field.delegate = self
+        return field
+    }()
     
     // MARK: Object lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -64,7 +76,6 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        doSomething()
         setupUI()
     }
     
@@ -72,30 +83,36 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         timer.invalidate()
     }
     
-    // MARK: Do something
-    func doSomething() {
-        let request = Discover.Something.Request()
-        interactor?.doSomething(request: request)
+    // MARK: Fetch
+    func fetchMovies(for text: String) {
+        let request = Discover.FetchMovies.Request(text: text)
+        Task {await interactor?.fetchMovies(request:request)}
     }
     
-    func displaySomething(viewModel: Discover.Something.ViewModel) {
-        //nameTextField.text = viewModel.name
+    // MARK: Display
+    func displayMovies(viewModel: Discover.FetchMovies.ViewModel) {
     }
+
 }
 
-//MARK : UI Funcs
+//MARK : UI
 extension DiscoverViewController {
+    
     private func setupUI() {
+        
+        //BG
         view.addSubview(bg)
         bg.anchor(.top(view.topAnchor), .leading(view.leadingAnchor),.trailing(view.trailingAnchor), .bottom(view.safeAreaLayoutGuide.bottomAnchor))
         
         let container = prepareMainContainer()
         
+        //Layout
         container.stack(
             topView(),
             inputView()
         )
         
+        //Gradient
         prepareGradient()
         
     }
@@ -122,12 +139,13 @@ extension DiscoverViewController {
     
     private func prepareGradient() {
         DispatchQueue.main.async { [unowned self] in
-            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0.7))
-            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.3))
+            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0.8))
+            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.2))
         }
     }
     
     private func topView() -> UIView {
+        
         let container = createContainer()
         
         //Content
@@ -183,14 +201,6 @@ extension DiscoverViewController {
         swipeBtn.tintColor = .white
         
         //Input container
-        let textField = IndentedTextField(
-            placeholder: "What are you in the mood for? Comedy, drama, action, romance?",
-            padding: 10,
-            cornerRadius: 8,
-            keyboardType: .default,
-            backgroundColor: .systemGray5.withAlphaComponent(0.5),
-            isSecureTextEntry: false
-        )
         textField.withBorder(width: 1, color: .systemGray5)
         let micBtn = UIButton(
             image: .init(systemName: "mic.fill")!,
@@ -209,8 +219,6 @@ extension DiscoverViewController {
         let swipeCircles = UIView()
         swipeCircles.stack( circle1,circle2, spacing: 5, alignment: .center)
 
-
-        
         container.stack(
             swipeCircles,
             swipeBtn,
@@ -218,7 +226,6 @@ extension DiscoverViewController {
             UIView(),
             spacing: 10
         ).padTop(10)
-        
         
         return container
     }
@@ -246,6 +253,19 @@ extension DiscoverViewController: UIScrollViewDelegate {
     }
 }
 
+extension DiscoverViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard textField.text != nil, textField.text != "" else {
+            return true
+        }
+        print("gönderildi: \(textField.text!)")
+        fetchMovies(for: textField.text!)
+        return true
+    }
+}
+
+
+// MARK: Objc
 extension DiscoverViewController {
     @objc func didTapMic() {
         

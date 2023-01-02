@@ -9,15 +9,17 @@
 import UIKit
 
 protocol DiscoverPresentationLogic {
-    func presentSomething(response: Discover.Something.Response)
+    func presentMovies(response: Discover.FetchMovies.Response)
 }
 
 class DiscoverPresenter: DiscoverPresentationLogic {
+    
     weak var viewController: DiscoverDisplayLogic?
     
     // MARK: Do something
-    func presentSomething(response: Discover.Something.Response) {
-        let viewModel = Discover.Something.ViewModel()
-        viewController?.displaySomething(viewModel: viewModel)
+    func presentMovies(response: Discover.FetchMovies.Response) {
+        let viewModel = Discover.FetchMovies.ViewModel(movies: response.movies)
+        viewController?.displayMovies(viewModel: viewModel)
     }
+
 }
