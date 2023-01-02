@@ -66,6 +66,6 @@ class MovieDetailRouter: NSObject, MovieDetailRoutingLogic, MovieDetailDataPassi
     // MARK: Passing data
     func passDataToMovieDetail(source: MovieDetailDataStore, destination: inout MovieDetailDataStore)
     {
-        destination.selectedMovie = source.selectedMovie ?? MockData.Result
+        destination.selectedMovie = source.selectedMovie
     }
 }

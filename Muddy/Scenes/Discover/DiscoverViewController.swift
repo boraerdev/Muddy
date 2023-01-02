@@ -86,7 +86,7 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: Fetch
     func fetchMovies(for text: String) {
         let request = Discover.FetchMovies.Request(text: text)
-        Task {try await interactor?.fetchMovies(request:request)}
+        Task {await interactor?.fetchMovies(request:request)}
     }
     
     // MARK: Display

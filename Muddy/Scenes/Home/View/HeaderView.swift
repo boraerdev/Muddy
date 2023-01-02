@@ -78,12 +78,12 @@ class HomeHeaderView: UIViewController {
                         textColor: .secondaryLabel,
                         numberOfLines: 1)
         
-        let voteAvarage = UILabel(text: "\(movie.voteAverage)",
+        let voteAvarage = UILabel(text: "\(movie.voteAverage ?? 0 )",
                         font: .systemFont(ofSize: 13, weight: .light),
                                   textColor: .orange,
                         numberOfLines: 1)
 
-        let overview = UILabel(text: "\(movie.overview)",
+        let overview = UILabel(text: "\(movie.overview.orNil)",
                         font: .systemFont(ofSize: 13, weight: .light),
                         textColor: .secondaryLabel,
                         numberOfLines: 2)
