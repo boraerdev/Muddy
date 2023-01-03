@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol DiscoverRoutingLogic {
-    //func routeToSomewhere(segue: UIStoryboardSegue?)
+    func routeToDetail(target: MovieDetailViewController)
 }
 
 protocol DiscoverDataPassing {
@@ -36,15 +36,23 @@ class DiscoverRouter: NSObject, DiscoverRoutingLogic, DiscoverDataPassing {
     //  }
     //}
     
+    // MARK: Routing
+    func routeToDetail(target: MovieDetailViewController) {
+        var destinationDS = target.router!.dataStore!
+        passDataToMovieDetail(source: dataStore!, destination: &destinationDS)
+        navigateToMovieDetail(source: viewController!, destination: target)
+    }
+    
     // MARK: Navigation
-    //func navigateToSomewhere(source: DiscoverViewController, destination: SomewhereViewController)
-    //{
-    //  source.show(destination, sender: nil)
-    //}
+    func navigateToMovieDetail(source: DiscoverViewController, destination: MovieDetailViewController)
+    {
+        destination.modalPresentationStyle = .overCurrentContext
+        source.show(destination, sender: nil)
+    }
     
     // MARK: Passing data
-    //func passDataToSomewhere(source: DiscoverDataStore, destination: inout SomewhereDataStore)
-    //{
-    //  destination.name = source.name
-    //}
+    func passDataToMovieDetail(source: DiscoverDataStore, destination: inout MovieDetailDataStore)
+    {
+        destination.selectedMovie = source.selectedMovie ?? MockData.Result
+    }
 }

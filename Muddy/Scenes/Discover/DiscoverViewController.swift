@@ -21,6 +21,7 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: Def
     private var timer: Timer!
     var movies: [Result] = []
+    var entitled: Bool = false
     
     // MARK: UI Components
     let scroll = UIScrollView()
@@ -38,6 +39,8 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         collection.register(DiscoverMoviesCollectionViewCell.self, forCellWithReuseIdentifier: DiscoverMoviesCollectionViewCell.identifier)
         return collection
     }()
+    
+    private var inputViewReferance: UIView!
     
     private lazy var bg = AnimatedBgView()
     
@@ -105,13 +108,10 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         movies = viewModel.movies
         DispatchQueue.main.async { [unowned self] in
             moviesCollection.reloadData()
-            
             UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) { [unowned self] in
                 moviesCollection.isHidden = false
             }
         }
-        
-        
     }
 
 }
@@ -121,16 +121,20 @@ extension DiscoverViewController {
     
     private func setupUI() {
         
-        //BG
+        //Base
         view.addSubview(bg)
         bg.anchor(.top(view.topAnchor), .leading(view.leadingAnchor),.trailing(view.trailingAnchor), .bottom(view.safeAreaLayoutGuide.bottomAnchor))
-        
         let container = prepareMainContainer()
+        
+        //Check entitled
+        inputViewReferance = inputView()
+        inputViewReferance.isHidden = entitled ? false: true
+        
         
         //Pages
         container.stack(
             topView(),
-            inputView()
+            inputViewReferance
         )
         
         //Gradient
@@ -292,6 +296,12 @@ extension DiscoverViewController: UICollectionViewDataSource, UICollectionViewDe
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscoverMoviesCollectionViewCell.identifier, for: indexPath) as? DiscoverMoviesCollectionViewCell else {return .init()}
         cell.configure(movie: movies[indexPath.row])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = movies[indexPath.row]
+        interactor?.setSelectedMovie(movie)
+        router?.routeToDetail(target: MovieDetailViewController())
     }
     
     

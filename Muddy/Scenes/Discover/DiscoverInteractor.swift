@@ -10,10 +10,12 @@ import UIKit
 
 protocol DiscoverBusinessLogic {
     func fetchMovies(request: Discover.FetchMovies.Request) async
+    func setSelectedMovie(_ movie: Result)
 }
 
 protocol DiscoverDataStore {
     var movies: [Result] { get set }
+    var selectedMovie: Result {get set}
 }
 
 class DiscoverInteractor: DiscoverBusinessLogic, DiscoverDataStore {
@@ -21,6 +23,7 @@ class DiscoverInteractor: DiscoverBusinessLogic, DiscoverDataStore {
     var presenter: DiscoverPresentationLogic?
     var worker: DiscoverWorker?
     var movies: [Result] = []
+    var selectedMovie: Result = MockData.Result
     
     
     // MARK: Fetch
@@ -37,6 +40,11 @@ class DiscoverInteractor: DiscoverBusinessLogic, DiscoverDataStore {
         })
         let response = Discover.FetchMovies.Response(movies: movies)
         presenter?.presentMovies(response: response)
+    }
+    
+    // MARK: Funncs
+    public func setSelectedMovie(_ movie: Result) {
+        selectedMovie = movie
     }
     
 }
