@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LBTATools
 
 protocol MovieDetailDisplayLogic: AnyObject {
     func displayMovieDetail(viewModel: MovieDetail.FetchMovieDetail.ViewModel)
@@ -14,7 +15,7 @@ protocol MovieDetailDisplayLogic: AnyObject {
     func displayRecommendations(viewModel: MovieDetail.FetchRecommendations.ViewModel)
 }
 
-class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
+final class MovieDetailViewController: UIViewController, MovieDetailDisplayLogic {
 
     var interactor: MovieDetailBusinessLogic?
     var router: (NSObjectProtocol & MovieDetailRoutingLogic & MovieDetailDataPassing)?
@@ -406,7 +407,6 @@ extension MovieDetailViewController {
     
     private func movieDetails() -> UIView {
         let container = UIView()
-        let infoContainer = UIView()
         
         //Overview
         let overview = UILabel(
@@ -418,12 +418,12 @@ extension MovieDetailViewController {
         )
         
         //Genre
-        var genresView = UIView()
+        let genresView = UIView()
         let genreList = movie?.genres ?? []
         let genres = genreList.map({ genre -> BarLabel in
             return .init(text: genre.name.orNil)
         })
-        var genresStack = genresView.hstack(spacing: 5)
+        let genresStack = genresView.hstack(spacing: 5)
         genres.forEach { lb in
             genresStack.addArrangedSubview(lb)
         }

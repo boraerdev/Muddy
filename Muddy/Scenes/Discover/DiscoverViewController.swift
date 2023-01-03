@@ -8,6 +8,7 @@
 
 import UIKit
 import LBTATools
+import Combine
 
 protocol DiscoverDisplayLogic: AnyObject {
     func displayMovies(viewModel: Discover.FetchMovies.ViewModel)
@@ -22,6 +23,8 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     private var timer: Timer!
     var movies: [Result] = []
     var entitled: Bool = true
+    var remaingCount: CurrentValueSubject<Int, Never> = .init(5)
+    var cancellable = Set<AnyCancellable>()
     
     // MARK: UI Components
     let scroll = UIScrollView()
@@ -213,11 +216,14 @@ extension DiscoverViewController {
         
         //User Info
         let userInfo = UIView()
-        let remainingLabel = BarLabel(text: "Daily Remaining Limit: 3", textColor: .secondaryLabel.withAlphaComponent(0.5))
+        let remainingLabel = BarLabel(text: "Daily Remaining: \(remaingCount.value)", textColor: .secondaryLabel.withAlphaComponent(0.5))
         let userType = BarLabel(text: "Free Plan", textColor: .secondaryLabel.withAlphaComponent(0.5))
         userInfo.hstack(
             userType, remainingLabel, spacing: 10, distribution: .fillProportionally
         ).padLeft(16).padRight(16)
+        remaingCount.sink { newValue in
+            remainingLabel.text = "Daily Remaining: \(newValue)"
+        }.store(in: &cancellable)
         
         //SwipeCircles
         let circle1 = drawCircle(size: 5, color: .secondaryLabel)
@@ -324,11 +330,26 @@ extension DiscoverViewController: UITextFieldDelegate {
         guard textField.text != nil, textField.text != "" else {
             return true
         }
+        let newRemaing = max(-1, remaingCount.value - 1)
+        guard newRemaing >= 0 else {
+            showAlert(title: "Upgrade Your Account", message: "Sorry, you have reached your daily usage limit. Please upgrade to premium to continue using the feature.")
+            return true
+        }
+        remaingCount.send(newRemaing)
         fetchMovies(for: textField.text!)
         return true
     }
 }
 
+//MARK: Funcs
+extension DiscoverViewController {
+    func showAlert(title: String, message: String) {
+      let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+      alertController.addAction(okAction)
+      present(alertController, animated: true, completion: nil)
+    }
+}
 
 // MARK: Objc
 extension DiscoverViewController {
