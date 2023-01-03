@@ -27,7 +27,7 @@ class MainTabbarController: UITabBarController  {
         .init(title: "Feed", controller: HomeViewController(), systemImageName: "film.stack"),
         .init(title: "Explore", controller: ExploreViewController(), systemImageName: "magnifyingglass"),
         .init(title: "Discover", controller: DiscoverViewController(), systemImageName: "bolt.horizontal"),
-        .init(title: "Contacts", controller: ContactViewController(), systemImageName:  "person.line.dotted.person"),
+        .init(title: "Matches", controller: ContactViewController(), systemImageName:  "person.line.dotted.person"),
         .init(title: "Profile", controller: ProfileViewController(), systemImageName: "person")
     ]
     

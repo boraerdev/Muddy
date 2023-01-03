@@ -26,6 +26,7 @@ class MovieDetailInteractor: MovieDetailBusinessLogic, MovieDetailDataStore {
     
     var recommendations: Recommendations?
     var presenter: MovieDetailPresentationLogic?
+    
     var worker: MovieDetailWorker?
     var selectedMovie: Result = MockData.Result
     var movie: DetailedMovie? = nil
@@ -36,7 +37,6 @@ class MovieDetailInteractor: MovieDetailBusinessLogic, MovieDetailDataStore {
         let worker = HomeWorker()
         let url: String = APIEndpoint.Movie.details(id: request.movieId).toString
         movie = try? await worker.downloadGenericAboutMovie(urlString: url)
-        
         let response = MovieDetail.FetchMovieDetail.Response(movie: movie)
         presenter?.presentMovieDetail(response: response)
     }

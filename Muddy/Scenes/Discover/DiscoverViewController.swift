@@ -21,7 +21,7 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     // MARK: Def
     private var timer: Timer!
     var movies: [Result] = []
-    var entitled: Bool = false
+    var entitled: Bool = true
     
     // MARK: UI Components
     let scroll = UIScrollView()
@@ -141,33 +141,7 @@ extension DiscoverViewController {
         prepareGradient()
         
     }
-    
-    private func createContainer() -> UIView {
-        let container = UIView()
-        let scenes = UIApplication.shared.connectedScenes
-        let windowScene = scenes.first as? UIWindowScene
-        let window = windowScene?.windows.first
-        let top    = window?.safeAreaInsets.top ?? 0
-        let height = self.tabBarController?.tabBar.frame.height ?? 49.0
-        return container.withSize(.init(width: view.frame.size.width, height: view.frame.height - top  - height))
-    }
-    
-    private func prepareMainContainer() -> UIView {
-        scroll.delegate = self
-        scroll.isPagingEnabled = true
-        scroll.showsVerticalScrollIndicator = false
-        view.addSubview(scroll)
-        scroll.fillSuperviewSafeAreaLayoutGuide()
-        return scroll
-    }
-    
-    private func prepareGradient() {
-        DispatchQueue.main.async { [unowned self] in
-            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0.8))
-            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.2))
-        }
-    }
-    
+        
     private func topView() -> UIView {
         
         let container = createContainer()
@@ -195,13 +169,14 @@ extension DiscoverViewController {
         let swipeCircles = UIView()
         swipeCircles.stack(circle1,circle2,swipeBtn, spacing: 5, alignment: .center)
         
+        
         //Layout
         container.stack(
             UIView(),
             logo.withHeight(300),
             UIView(),
             title,
-            container.hstack(overview).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16)),
+            container.hstack(overview).padLeft(16).padRight(16),
             swipeCircles.withHeight(45),
             spacing: 10
         ).padBottom(50)
@@ -236,6 +211,14 @@ extension DiscoverViewController {
             textField.withHeight(45), micBtn.withWidth(25), spacing: 10
         ).padLeft(16).padRight(16)
         
+        //User Info
+        let userInfo = UIView()
+        let remainingLabel = BarLabel(text: "Daily Remaining Limit: 3", textColor: .secondaryLabel.withAlphaComponent(0.5))
+        let userType = BarLabel(text: "Free Plan", textColor: .secondaryLabel.withAlphaComponent(0.5))
+        userInfo.hstack(
+            userType, remainingLabel, spacing: 10, distribution: .fillProportionally
+        ).padLeft(16).padRight(16)
+        
         //SwipeCircles
         let circle1 = drawCircle(size: 5, color: .secondaryLabel)
         let circle2 = drawCircle(size: 5, color: .white)
@@ -249,15 +232,44 @@ extension DiscoverViewController {
             moviesCollection
         ).padLeft(16).padRight(16)
 
+        //Layout
         container.stack(
             swipeCircles,
             inputContainer,
+            userInfo,
             collectionView,
             spacing: 10
         ).padTop(10)
         
         return container
     }
+    
+    private func createContainer() -> UIView {
+        let container = UIView()
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first
+        let top    = window?.safeAreaInsets.top ?? 0
+        let height = self.tabBarController?.tabBar.frame.height ?? 49.0
+        return container.withSize(.init(width: view.frame.size.width, height: view.frame.height - top  - height))
+    }
+    
+    private func prepareMainContainer() -> UIView {
+        scroll.delegate = self
+        scroll.isPagingEnabled = true
+        scroll.showsVerticalScrollIndicator = false
+        view.addSubview(scroll)
+        scroll.fillSuperviewSafeAreaLayoutGuide()
+        return scroll
+    }
+    
+    private func prepareGradient() {
+        DispatchQueue.main.async { [unowned self] in
+            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0.8))
+            view.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 0.2))
+        }
+    }
+
     
 }
 

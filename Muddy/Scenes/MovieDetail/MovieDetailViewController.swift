@@ -316,7 +316,7 @@ extension MovieDetailViewController {
         
         let ratingView = createRatingView(score: movie?.voteAverage ?? 0)
         ratingView.withSize(.init(width: 100, height: 20))
-        
+
         detailsContainer.hstack(
             posterImageView.withSize(.init(width: 135, height: 200)),
             detailsContainer.stack(
@@ -408,8 +408,6 @@ extension MovieDetailViewController {
         let container = UIView()
         let infoContainer = UIView()
         
-        
-        
         //Overview
         let overview = UILabel(
             text: movie?.overview,
@@ -420,26 +418,22 @@ extension MovieDetailViewController {
         )
         
         //Genre
-        let genresString = makeGenreString()
-        let genresLabel = UILabel(
-            text: genresString,
-            font: .systemFont(ofSize: 15),
-            textColor: .secondaryLabel,
-            textAlignment: .left,
-            numberOfLines: 1
-        )
-        
-        
-        infoContainer.stack(
-            overview,
-            genresLabel
-        ).withMargins(
-            .init(top: 0, left: 16, bottom: 0, right: 16))
-        
+        var genresView = UIView()
+        let genreList = movie?.genres ?? []
+        let genres = genreList.map({ genre -> BarLabel in
+            return .init(text: genre.name.orNil)
+        })
+        var genresStack = genresView.hstack(spacing: 5)
+        genres.forEach { lb in
+            genresStack.addArrangedSubview(lb)
+        }
+        genresStack.addArrangedSubview(UIView())
+
         container.stack(
-            infoContainer,
+            overview,
+            genresView,
             spacing: 10
-        )
+        ).padLeft(16).padRight(16)
         
         return container
     }
@@ -533,18 +527,6 @@ extension MovieDetailViewController {
             movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 1), endPoint: .init(x: 0.5, y: 0))
             movieBackgropImage.insertGradient(colors: [.black, .clear], startPoint: .init(x: 0.5, y: 0), endPoint: .init(x: 0.5, y: 1))
         }
-    }
-    
-    private func makeGenreString() -> String {
-        var genresString = ""
-        movie?.genres?.forEach({ genre in
-            if genre.id != movie?.genres?.last?.id, genre.name != nil {
-                genresString += genre.name! + " · "
-            } else if genre.id == movie?.genres?.last?.id, genre.name != nil {
-                genresString += genre.name!
-            }
-        })
-        return genresString
     }
     
     private func fetchMovieImage() {
