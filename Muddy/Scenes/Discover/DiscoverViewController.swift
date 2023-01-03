@@ -20,17 +20,23 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     
     // MARK: Def
     private var timer: Timer!
+    var movies: [Result] = []
     
     // MARK: UI Components
-    private lazy var textView: UITextView = {
-        let tv = UITextView(backgroundColor: .clear)
-        tv.withBorder(width: 1, color: .white)
-        tv.layer.cornerRadius = 8
-        tv.font = .systemFont(ofSize: 15)
-        tv.layer.cornerCurve = .continuous
-        tv.backgroundColor = .systemGray5.withAlphaComponent(0.5)
-        tv.withBorder(width: 1, color: .systemGray5)
-        return tv
+    let scroll = UIScrollView()
+
+    private lazy var moviesCollection: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let width = (view.frame.size.width - 32 - 20)/3
+        layout.itemSize = .init(width: width, height: width*1.48)
+        layout.minimumInteritemSpacing = 10
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.dataSource = self
+        collection.delegate = self
+        collection.backgroundColor = .clear
+        collection.isHidden = true
+        collection.register(DiscoverMoviesCollectionViewCell.self, forCellWithReuseIdentifier: DiscoverMoviesCollectionViewCell.identifier)
+        return collection
     }()
     
     private lazy var bg = AnimatedBgView()
@@ -79,6 +85,11 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        textField.resignFirstResponder()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         timer.invalidate()
     }
@@ -91,6 +102,16 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     
     // MARK: Display
     func displayMovies(viewModel: Discover.FetchMovies.ViewModel) {
+        movies = viewModel.movies
+        DispatchQueue.main.async { [unowned self] in
+            moviesCollection.reloadData()
+            
+            UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) { [unowned self] in
+                moviesCollection.isHidden = false
+            }
+        }
+        
+        
     }
 
 }
@@ -106,7 +127,7 @@ extension DiscoverViewController {
         
         let container = prepareMainContainer()
         
-        //Layout
+        //Pages
         container.stack(
             topView(),
             inputView()
@@ -128,7 +149,6 @@ extension DiscoverViewController {
     }
     
     private func prepareMainContainer() -> UIView {
-        let scroll = UIScrollView()
         scroll.delegate = self
         scroll.isPagingEnabled = true
         scroll.showsVerticalScrollIndicator = false
@@ -162,14 +182,14 @@ extension DiscoverViewController {
         
         //Swpie button
         let swipeBtn = UIImageView(image: .init(systemName: "chevron.down"), contentMode: .scaleAspectFit)
-        swipeBtn.withWidth(25)
+        swipeBtn.withHeight(25)
         swipeBtn.tintColor = .white
 
         //Swipe circles
         let circle1 = drawCircle(size: 5, color: .white)
         let circle2 = drawCircle(size: 5, color: .secondaryLabel)
         let swipeCircles = UIView()
-        swipeCircles.stack( circle1,circle2, spacing: 5, alignment: .center)
+        swipeCircles.stack(circle1,circle2,swipeBtn, spacing: 5, alignment: .center)
         
         //Layout
         container.stack(
@@ -178,8 +198,7 @@ extension DiscoverViewController {
             UIView(),
             title,
             container.hstack(overview).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16)),
-            swipeBtn,
-            swipeCircles,
+            swipeCircles.withHeight(45),
             spacing: 10
         ).padBottom(50)
         
@@ -197,7 +216,7 @@ extension DiscoverViewController {
         
         //Swipe btn
         let swipeBtn = UIImageView(image: .init(systemName: "chevron.up"), contentMode: .scaleAspectFit)
-        swipeBtn.withWidth(25)
+        swipeBtn.withHeight(25)
         swipeBtn.tintColor = .white
         
         //Input container
@@ -217,13 +236,19 @@ extension DiscoverViewController {
         let circle1 = drawCircle(size: 5, color: .secondaryLabel)
         let circle2 = drawCircle(size: 5, color: .white)
         let swipeCircles = UIView()
-        swipeCircles.stack( circle1,circle2, spacing: 5, alignment: .center)
+        swipeCircles.withHeight(45)
+        swipeCircles.stack( swipeBtn, circle1,circle2, spacing: 5, alignment: .center)
+        
+        //CollectionView
+        let collectionView = UIView()
+        collectionView.stack(
+            moviesCollection
+        ).padLeft(16).padRight(16)
 
         container.stack(
             swipeCircles,
-            swipeBtn,
             inputContainer,
-            UIView(),
+            collectionView,
             spacing: 10
         ).padTop(10)
         
@@ -234,23 +259,42 @@ extension DiscoverViewController {
 
 extension DiscoverViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        guard let tabBarController = tabBarController as? MainTabbarController else {
-            return
-        }
-        
-        if offsetY > 150 {
-            tabBarController.discoverBtn.isHidden = true
-            tabBarController.tabBar.isHidden = true
-            tabBarController.tabBar.layer.zPosition = -1
-        }
-        
-        if offsetY < 450 {
-            tabBarController.discoverBtn.isHidden = false
-            tabBarController.tabBar.isHidden = false
-            tabBarController.tabBar.layer.zPosition = 0
+        switch scrollView {
+        case scroll:
+            let offsetY = scrollView.contentOffset.y
+            guard let tabBarController = tabBarController as? MainTabbarController else {
+                return
+            }
+            
+            if offsetY > 150 {
+                tabBarController.discoverBtn.isHidden = true
+                tabBarController.tabBar.isHidden = true
+                tabBarController.tabBar.layer.zPosition = -1
+            }
+            
+            if offsetY < 450 {
+                tabBarController.discoverBtn.isHidden = false
+                tabBarController.tabBar.isHidden = false
+                tabBarController.tabBar.layer.zPosition = 0
+            }
+        default:
+            break
         }
     }
+}
+
+extension DiscoverViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        movies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiscoverMoviesCollectionViewCell.identifier, for: indexPath) as? DiscoverMoviesCollectionViewCell else {return .init()}
+        cell.configure(movie: movies[indexPath.row])
+        return cell
+    }
+    
+    
 }
 
 extension DiscoverViewController: UITextFieldDelegate {

@@ -53,7 +53,7 @@ final class CastCollectionViewCell: UICollectionViewCell {
     func configure(cast: Cast) {
         orgName.text = cast.name
         characterName.text = cast.character
-        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .w185, path: cast.profilePath ?? "").toString) else {return}
+        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .w185, path: cast.profilePath.orNil).toString) else {return}
         castImage.kf.setImage(
             with: url,
             options: [.memoryCacheExpiration(.expired), .diskCacheExpiration(.expired)]

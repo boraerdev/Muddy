@@ -276,7 +276,7 @@ extension ExploreViewController: UICollectionViewDataSource, UICollectionViewDel
             return cell
         case sliderMenuCollectionView:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SliderMenuCell.identifier, for: indexPath) as? SliderMenuCell else {return .init()}
-            cell.configure(genres[indexPath.item].name ?? "")
+            cell.configure(genres[indexPath.item].name.orNil)
             return cell
         default:
             return .init()
@@ -288,7 +288,7 @@ extension ExploreViewController: UICollectionViewDataSource, UICollectionViewDel
         guard !genres.isEmpty else {return .init(width: 0, height: 0)}
         if collectionView == sliderMenuCollectionView {
             let estimatedCell = SliderMenuCell(frame: .init(x: 0, y: 0, width: 1000, height: 40))
-            estimatedCell.configure(genres[indexPath.row].name ?? "")
+            estimatedCell.configure(genres[indexPath.row].name.orNil)
             estimatedCell.layoutIfNeeded()
             let estimatedSizeCell = estimatedCell.systemLayoutSizeFitting(.init(width: 1000, height: 40))
             return .init(width: estimatedSizeCell.width, height: 40)

@@ -73,7 +73,7 @@ class HomeHeaderView: UIViewController {
                             textAlignment: .left,
                             numberOfLines: 2)
         
-        let relaseDate = UILabel(text: "\(movie.releaseDate ?? "")",
+        let relaseDate = UILabel(text: "\(movie.releaseDate.orNil)",
                         font: .systemFont(ofSize: 13, weight: .light),
                         textColor: .secondaryLabel,
                         numberOfLines: 1)
@@ -111,7 +111,7 @@ class HomeHeaderView: UIViewController {
     }
     
     private func fetchImage() {
-        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .original, path: movie.backdropPath ?? "").toString) else {return}
+        guard let url = URL(string: APIEndpoint.Image.withQuality(quality: .original, path: movie.backdropPath.orNil).toString) else {return}
         imageView.kf.setImage(
             with: url
         )
