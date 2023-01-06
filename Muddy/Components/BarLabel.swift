@@ -14,11 +14,12 @@ class BarLabel: UILabel {
         return .init(width: superSize.width+20, height: superSize.height+10)
     }
     
-    public init(text: String, textColor: UIColor = .white) {
+    public init(text: String, textColor: UIColor = .white, numberOfLines: Int = 1) {
         super.init(frame: .zero)
         self.text = text
         textAlignment = .center
         self.textColor = textColor
+        self.numberOfLines = numberOfLines
         backgroundColor = .systemGray5.withAlphaComponent(0.5)
         withBorder(width: 1, color: .systemGray5)
         layer.cornerRadius = 8

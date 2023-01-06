@@ -31,6 +31,7 @@ class DiscoverInteractor: DiscoverBusinessLogic, DiscoverDataStore {
         let searchTitles = extractQuotedStrings(from: request.text).map { title in
             title.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
         }
+        let sentence = extractStringBetweenParentheses(from: request.text).orNil
         movies = await searchTitles.asyncMap({ title in
             let worker = HomeWorker.shared
             let url = APIEndpoint.Movie.searchMovie(query: title).toString
@@ -38,7 +39,7 @@ class DiscoverInteractor: DiscoverBusinessLogic, DiscoverDataStore {
             let movie = result?.results?.first ?? MockData.Result
             return movie
         })
-        let response = Discover.FetchMovies.Response(movies: movies)
+        let response = Discover.FetchMovies.Response(movies: movies, sentence: sentence)
         presenter?.presentMovies(response: response)
     }
     

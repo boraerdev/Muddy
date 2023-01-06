@@ -18,7 +18,7 @@ class DiscoverPresenter: DiscoverPresentationLogic {
     
     // MARK: Do something
     func presentMovies(response: Discover.FetchMovies.Response) {
-        let viewModel = Discover.FetchMovies.ViewModel(movies: response.movies)
+        let viewModel = Discover.FetchMovies.ViewModel(movies: response.movies, sentence: response.sentence)
         viewController?.displayMovies(viewModel: viewModel)
     }
 

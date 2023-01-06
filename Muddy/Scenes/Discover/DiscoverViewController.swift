@@ -45,6 +45,8 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
     
     private var inputViewReferance: UIView!
     
+    private var responseLabelReferance: UILabel!
+    
     private lazy var bg = AnimatedBgView()
     
     private lazy var textField: IndentedTextField = {
@@ -111,8 +113,10 @@ final class DiscoverViewController: UIViewController, DiscoverDisplayLogic {
         movies = viewModel.movies
         DispatchQueue.main.async { [unowned self] in
             moviesCollection.reloadData()
-            UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) { [unowned self] in
+            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.5) { [unowned self] in
                 moviesCollection.isHidden = false
+                responseLabelReferance.isHidden = false
+                responseLabelReferance.text = viewModel.sentence
             }
         }
     }
@@ -232,6 +236,13 @@ extension DiscoverViewController {
         swipeCircles.withHeight(45)
         swipeCircles.stack( swipeBtn, circle1,circle2, spacing: 5, alignment: .center)
         
+        //
+        let responseLblView = UIView()
+        let responseLbl = BarLabel(text: "", textColor: .white, numberOfLines: 0)
+        responseLbl.isHidden = true
+        responseLabelReferance = responseLbl
+        responseLblView.stack(responseLabelReferance).padLeft(16).padRight(16)
+        
         //CollectionView
         let collectionView = UIView()
         collectionView.stack(
@@ -243,6 +254,7 @@ extension DiscoverViewController {
             swipeCircles,
             inputContainer,
             userInfo,
+            responseLblView,
             collectionView,
             spacing: 10
         ).padTop(10)

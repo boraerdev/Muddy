@@ -16,9 +16,11 @@ enum Discover {
         }
         struct Response {
             var movies: [Result]
+            var sentence: String
         }
         struct ViewModel {
             var movies: [Result]
+            var sentence: String
         }
     }
 }

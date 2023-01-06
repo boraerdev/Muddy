@@ -44,7 +44,6 @@ final class HomeViewController: UIViewController {
         return field
     }()
     
-    
     private lazy var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection in
             return HomeViewController.createSectionLayout(section: sectionIndex)
@@ -292,8 +291,7 @@ extension HomeViewController: UICollectionViewDelegate {
         
         if collectionView == homeCollectionView {
             let movie = movies[MovieGender(rawValue: indexPath.section) ?? .popular]?[indexPath.row] ?? MockData.Result
-            interactor?.setSelectedMovie(movie: movie)
-            router?.routeToDetail(target: MovieDetailViewController())
+            goMovieDetail(movie)
         }
     }
 }
@@ -323,6 +321,11 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 extension HomeViewController {
     
     public func prepareGoDetailForHeaderView(movie: Result) {
+        interactor?.setSelectedMovie(movie: movie)
+        router?.routeToDetail(target: MovieDetailViewController())
+    }
+    
+    private func goMovieDetail(_ movie: Result) {
         interactor?.setSelectedMovie(movie: movie)
         router?.routeToDetail(target: MovieDetailViewController())
     }

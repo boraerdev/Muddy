@@ -46,6 +46,17 @@ func extractQuotedStrings(from paragraph: String) -> [String] {
     }
 }
 
+func extractStringBetweenParentheses(from text: String) -> String? {
+    let pattern = "\\(([^)]*)\\)"
+    let regex = try! NSRegularExpression(pattern: pattern)
+    let matches = regex.matches(in: text, range: NSRange(text.startIndex..., in: text))
+    return matches.first.flatMap {
+        let range = Range($0.range, in: text)!
+        let characters = Array(text[range])
+        return String(characters[1..<characters.count - 1])
+    }
+}
+
 func drawCircle(size: CGFloat, color: UIColor) -> UIView {
   let circleView = UIView()
   let circlePath = UIBezierPath(arcCenter: CGPoint(x: size / 2, y: size / 2), radius: size / 2, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)

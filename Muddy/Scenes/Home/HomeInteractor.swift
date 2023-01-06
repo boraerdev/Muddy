@@ -33,7 +33,7 @@ class HomeInteractor: HomeBusinessLogic, HomeDataStore {
     var selectedMovie: Result?
     
     func fetchHomeMovies(request: Home.HomeMovies.Request) async {
-        let worker = HomeWorker()
+        let worker = HomeWorker.shared
         popularMovies = try? await worker.downloadGenericAboutMovie(urlString: APIEndpoint.Movie.popularMovies.toString)
         
         topRatedMovies = try? await worker.downloadGenericAboutMovie(urlString: APIEndpoint.Movie.topRatedMovies.toString)
