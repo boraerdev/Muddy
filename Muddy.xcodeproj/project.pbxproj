@@ -52,6 +52,9 @@
 		0AC66D742953CFBB00905542 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC66D732953CFBB00905542 /* Result.swift */; };
 		0ACA71D7295D09FD007A8E83 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACA71D6295D09FD007A8E83 /* Genre.swift */; };
 		0AD67320296A1D9C00B6B249 /* ExploreInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6731F296A1D9C00B6B249 /* ExploreInteractorTests.swift */; };
+		0AD67323296A27A600B6B249 /* InteractorMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD67322296A27A600B6B249 /* InteractorMock.swift */; };
+		0AD67325296A27F500B6B249 /* PresenterMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD67324296A27F500B6B249 /* PresenterMock.swift */; };
+		0AD67327296A280D00B6B249 /* WorkerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD67326296A280D00B6B249 /* WorkerMock.swift */; };
 		0AED72BB295654D9004E2286 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AED72BA295654D9004E2286 /* Credits.swift */; };
 		0AED72BE29565FBE004E2286 /* CastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AED72BD29565FBE004E2286 /* CastCollectionViewCell.swift */; };
 		0AF1A5392952021900895A65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF1A5382952021900895A65 /* AppDelegate.swift */; };
@@ -143,6 +146,9 @@
 		0AC66D732953CFBB00905542 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		0ACA71D6295D09FD007A8E83 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		0AD6731F296A1D9C00B6B249 /* ExploreInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreInteractorTests.swift; sourceTree = "<group>"; };
+		0AD67322296A27A600B6B249 /* InteractorMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractorMock.swift; sourceTree = "<group>"; };
+		0AD67324296A27F500B6B249 /* PresenterMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterMock.swift; sourceTree = "<group>"; };
+		0AD67326296A280D00B6B249 /* WorkerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerMock.swift; sourceTree = "<group>"; };
 		0AED72BA295654D9004E2286 /* Credits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		0AED72BD29565FBE004E2286 /* CastCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastCollectionViewCell.swift; sourceTree = "<group>"; };
 		0AF1A5352952021900895A65 /* Muddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Muddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -320,9 +326,20 @@
 		0AD6731E296A1D8D00B6B249 /* Explore */ = {
 			isa = PBXGroup;
 			children = (
-				0AD6731F296A1D9C00B6B249 /* ExploreInteractorTests.swift */,
+				0AD67322296A27A600B6B249 /* InteractorMock.swift */,
+				0AD67324296A27F500B6B249 /* PresenterMock.swift */,
+				0AD67326296A280D00B6B249 /* WorkerMock.swift */,
+				0AD67321296A278800B6B249 /* InteractorTests */,
 			);
 			path = Explore;
+			sourceTree = "<group>";
+		};
+		0AD67321296A278800B6B249 /* InteractorTests */ = {
+			isa = PBXGroup;
+			children = (
+				0AD6731F296A1D9C00B6B249 /* ExploreInteractorTests.swift */,
+			);
+			path = InteractorTests;
 			sourceTree = "<group>";
 		};
 		0AED72BC29565FA0004E2286 /* View */ = {
@@ -588,9 +605,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AD67323296A27A600B6B249 /* InteractorMock.swift in Sources */,
+				0AD67325296A27F500B6B249 /* PresenterMock.swift in Sources */,
 				0AD67320296A1D9C00B6B249 /* ExploreInteractorTests.swift in Sources */,
 				0AB4B52F2968D57500C4CC10 /* MuddyTests.swift in Sources */,
 				0AB4B5382968D5BE00C4CC10 /* HomeInteractorTests.swift in Sources */,
+				0AD67327296A280D00B6B249 /* WorkerMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
