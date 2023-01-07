@@ -15,8 +15,6 @@ func getYearFromDate(dateString: String) -> String {
     return dateFormatter.string(from: date)
 }
 
-import UIKit
-
 func shakeImageView(imageView: UIImageView) {
     let shake = CAKeyframeAnimation(keyPath: "transform.translation.x")
     shake.duration = 0.1
