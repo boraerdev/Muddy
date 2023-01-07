@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Result
-struct Result: Codable {
+struct Result: Codable, Equatable {
     let adult: Bool?
     let backdropPath: String?
     let genreIDS: [Int]?
