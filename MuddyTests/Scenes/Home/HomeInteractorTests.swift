@@ -21,27 +21,29 @@ final class HomeInteractorTests: XCTestCase {
         super.tearDown()
     }
     
-    func test_fetchHomeMovies_inwoked() async {
+    func test_fetchHomeMovies_inwokedAndFetch() async {
         //Given
-        XCTAssertEqual(homeBusinessLogic.invokedFetchHomeMovies, false)
+        XCTAssertFalse(homeBusinessLogic.invokedFetchHomeMovies)
         XCTAssertEqual(homeBusinessLogic.invokedFetchHomeMoviesCount, 0)
+        XCTAssertFalse(homeBusinessLogic.invokedNowPlayingMoviesSetter)
         //When
         homeBusinessLogic.fetchHomeMovies(request: .init())
         //Then
-        XCTAssertEqual(homeBusinessLogic.invokedFetchHomeMovies, true)
+        XCTAssertTrue(homeBusinessLogic.invokedFetchHomeMovies)
         XCTAssertEqual(homeBusinessLogic.invokedFetchHomeMoviesCount, 1)
+        XCTAssertTrue(homeBusinessLogic.invokedNowPlayingMoviesSetter)
     }
     
-    func test_setSelectMovie_setSelected_inwokeAndSet(){
+    func test_setSelectMovie_setSelected_invokedAndSet(){
         //Given
         XCTAssertNil(homeBusinessLogic.invokedSelectedMovie)
-        XCTAssertEqual(homeBusinessLogic.invokedSetSelectedMovie, false)
+        XCTAssertFalse(homeBusinessLogic.invokedSetSelectedMovie)
         XCTAssertEqual(homeBusinessLogic.invokedSetSelectedMovieCount, 0)
         //When
         homeBusinessLogic.setSelectedMovie(movie: MockData.Result)
         //Then
         XCTAssertNotNil(homeBusinessLogic.invokedSelectedMovie)
-        XCTAssertEqual(homeBusinessLogic.invokedSetSelectedMovie, true)
+        XCTAssertTrue(homeBusinessLogic.invokedSetSelectedMovie)
         XCTAssertEqual(homeBusinessLogic.invokedSetSelectedMovieCount, 1)
     }
     
@@ -172,6 +174,7 @@ final class MockHomeInteractor: HomeBusinessLogic, HomeDataStore {
         invokedFetchHomeMoviesCount += 1
         invokedFetchHomeMoviesParameters = (request, ())
         invokedFetchHomeMoviesParametersList.append((request, ()))
+        nowPlayingMovies = MockData.NowPlayingMovies
     }
 
     var invokedSetSelectedMovie = false
